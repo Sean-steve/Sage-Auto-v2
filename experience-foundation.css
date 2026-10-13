@@ -423,3 +423,15 @@ body.sage-studio .public-shell .d2-step.done > span{
   color:#ffffff!important;
   opacity:1!important;
 }
+
+/* Axe final two operational routes: readable board footer and fleet status. */
+body.sage-studio .main footer.op-board-footer,
+body.sage-studio .main footer.op-board-footer > span{
+  color:#344156!important;
+  opacity:1!important;
+}
+body.sage-studio .main .op-fleet-pill{
+  color:#225347!important;
+  background:#e8f2ec!important;
+  opacity:1!important;
+}
