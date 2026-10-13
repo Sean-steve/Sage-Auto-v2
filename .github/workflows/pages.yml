@@ -24,6 +24,7 @@ jobs:
         run: |
           node tests/smoke.test.js
           node tests/company-workflows.test.js
+          node tests/company-edge-cases.test.js
       - name: Verify frontend assets exist
         run: |
           test -s index.html
