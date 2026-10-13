@@ -89,6 +89,6 @@ state.portal="branded";state.page="Checkout & review";
 result=api.decorateCheckout(ctx,"<main><div>Legacy checkout form</div></main>");
 assert.match(result,/no live reservation held|Sample conflict/i);
 assert.match(result,/Legacy checkout form/);
-assert.match(result,/no booking or payment made/i);
+assert.match(result,/does not reserve a car or process/i);
 assert.equal(api.checkoutGuard(ctx,{vehicle:"V01",pickup:"2026-10-16",days:2}).ok,false);
 console.log("CH-003..010 UI wiring PASS: all 10 workspaces, legacy content, original dialogs, evidence states, renter and owner views, branded checkout.");
