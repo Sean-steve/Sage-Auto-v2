@@ -19,7 +19,7 @@ This version is deliberately dependency-free: open `index.html` in a browser or 
 
 ## Quality checks
 
-Run `node --check app.js && node --check company-detail.js`, then `node tests/smoke.test.js` and `node tests/company-workflows.test.js`.
+Run `node --check app.js && node --check company-detail.js`, then `node tests/smoke.test.js` and `node tests/company-workflows.test.js` and `node tests/company-edge-cases.test.js`.
 
 ## Hosting
 
