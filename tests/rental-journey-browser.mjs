@@ -41,7 +41,7 @@ try{
      await first.click();
      if(!await page.locator(".rj-drawer").isVisible())throw Error("Hold/availability decision drawer missing");
      if(!await page.getByText("not live availability",{exact:false}).count())throw Error("Missing live-availability disclaimer");
-     await page.locator('.rj-drawer [data-action="journey:close"]').click();
+     await page.locator('.rj-drawer [data-action="journey:close"]').first().click();
     }
     if(screen==="Contracts & handover"){
      const count=await page.locator('[data-action="journey:existingHandover"]').count();
@@ -57,12 +57,12 @@ try{
      await modal.waitFor();
      const text=await modal.innerText();
      if(!text.includes("Recorded receipts")||!text.includes("Unallocated balance"))throw Error("Receipt allocation context missing");
-     await modal.locator('[data-action="journey:close"]').click();
+     await modal.locator('[data-action="journey:close"]').first().click();
     }
     if(screen==="Owner settlements"){
      await page.locator('[data-action="journey:settlement"]').first().click();
      if(!await page.getByText("No transfer or reconciliation result",{exact:false}).count())throw Error("Unverified transfer disclaimer absent");
-     await page.locator('.rj-drawer [data-action="journey:close"]').click();
+     await page.locator('.rj-drawer [data-action="journey:close"]').first().click();
     }
     const shot=screen.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+device+".png";
     await page.screenshot({path:path.join(output,shot),fullPage:true});
