@@ -17,7 +17,7 @@ const gaps = {
  branded:["Checkout & review"]
 };
 const routes=[...surfaces,...Object.entries(gaps).flatMap(([p,pages])=>pages.map(name=>[p,name]))];
-const sizes=[{name:"desktop",width:1440,height:900},{name:"mobile",width:390,height:844}];
+const sizes=[{name:"small-mobile",width:360,height:760},{name:"mobile",width:390,height:844},{name:"tablet",width:768,height:1024},{name:"small-desktop",width:1024,height:768},{name:"desktop",width:1440,height:900}];
 const report={testedAt:new Date().toISOString(),base,routes:routes.length,viewports:sizes,results:[]};
 const browser=await chromium.launch({headless:true});
 try {
@@ -40,7 +40,7 @@ try {
       return {main:Boolean(main),heading:h1?.innerText?.trim()||"",viewportWidth:w,documentWidth:full,overflowPx:Math.max(0,full-w),bodyHeight:document.body.scrollHeight,buttons:document.querySelectorAll("button").length};
     });
     const filename=size.name+"-"+slug+".png";
-    await page.screenshot({path:path.join(output,filename),fullPage:false,animations:"disabled"});
+    const isMainExperience=surfaces.some(([p,r])=>p===surface&&r===screen);if(isMainExperience||size.name==="desktop"||size.name==="mobile")await page.screenshot({path:path.join(output,filename),fullPage:false,animations:"disabled"});
     report.results.push({surface,screen,viewport:size.name,screenshot:filename,...metrics,errors:errors.slice(before)});
    } catch(err) {
     report.results.push({surface,screen,viewport:size.name,failed:String(err),errors:errors.slice(before)});
