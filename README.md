@@ -42,6 +42,10 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
 - Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
 
+## Design inspiration & quality standards
+
+Future UI/UX work must use the [Sage Auto SaaS Design Reference Study](docs/DESIGN_REFERENCES_SAAS_2026.md): learn visual polish from Dribbble, workflow simplicity from Ubrain, scalable patterns from Fuse, lifecycle coherence from VenueX, and admin maturity from Skote. Do not copy copyrighted template assets or sacrifice functional workflows for decoration.
+
 ## Phase 3-E · Premium Automotive Visual Reconstruction
 
 The V2 experience now has a distinctive, automotive-first visual language—not just a restyled KPI dashboard. The premium cockpit includes a dynamic company operations queue, fleet composition ring, image-forward vehicle spotlight, photo-backed public covers, redesigned fleet gallery and role-specific home presentation.
