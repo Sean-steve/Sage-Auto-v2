@@ -435,3 +435,6 @@ body.sage-studio .main .op-fleet-pill{
   background:#e8f2ec!important;
   opacity:1!important;
 }
+
+/* Final Work Mode prototype disclaimer must be readable on its light canvas. */
+body.sage-studio .main .op-demo-note{color:#344156!important;opacity:1!important}
