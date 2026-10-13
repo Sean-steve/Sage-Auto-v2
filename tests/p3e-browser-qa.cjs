@@ -8,7 +8,8 @@ const base=process.env.SAGE_PREVIEW_URL||"http://127.0.0.1:4173";
 const folder=path.join(process.cwd(),"visual-artifacts");
 fs.mkdirSync(folder,{recursive:true});
 const entries=[
- {name:"company-command-centre",hash:"company/Overview",wait:".sx-cockpit"},
+ {name:"company-command-centre",hash:"company/Overview",wait:".op-workspace"},
+ {name:"company-queue",hash:"company/Today%27s%20operations",wait:".op-workboard"},
  {name:"fleet-showroom",hash:"company/Fleet",wait:".p-gallery"},
  {name:"booking-operations",hash:"company/Bookings",wait:".rx-bookings"},
  {name:"availability-board",hash:"company/Availability",wait:".rx-allocation-grid"},
@@ -28,7 +29,7 @@ const entries=[
  {name:"branded-showroom",hash:"branded/Explore%20vehicles",wait:".sx-public-stage"}
 ];
 const sizes=[
- {name:"desktop",width:1440,height:900,names:["company-command-centre","fleet-showroom","booking-operations","availability-board","inspection-studio","finance-workbench","pricing-lab","rental-returns","owner-settlements","renter-garage","marketing-home","branded-showroom"]},
+ {name:"desktop",width:1440,height:900,names:["company-command-centre","company-queue","fleet-showroom","booking-operations","availability-board","inspection-studio","finance-workbench","pricing-lab","rental-returns","owner-settlements","renter-garage","marketing-home","branded-showroom"]},
  {name:"laptop",width:1024,height:768,names:["company-command-centre","platform-network","corporate-mobility","agent-partners","service-studio","fleet-showroom","availability-board","finance-workbench"]},
  {name:"tablet",width:768,height:1024,names:["company-command-centre","fleet-showroom","owner-portfolio","inspection-studio","booking-operations","owner-settlements"]},
  {name:"phone",width:390,height:844,names:["company-command-centre","fleet-showroom","availability-board","booking-operations","inspection-studio","finance-workbench","renter-garage","driver-cockpit","branded-showroom"]},
