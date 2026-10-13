@@ -19,11 +19,19 @@ This version is deliberately dependency-free: open `index.html` in a browser or 
 
 ## Quality checks
 
-Run `node --check app.js && node --check company-detail.js`, then `node tests/smoke.test.js` and `node tests/company-workflows.test.js` and `node tests/company-edge-cases.test.js`.
+Run `node --check app.js && node --check company-detail.js`, then `node tests/smoke.test.js` and `node tests/company-workflows.test.js`, `node tests/company-edge-cases.test.js` and `node tests/external-portals.test.js`.
 
 ## Hosting
 
 A GitHub Pages workflow is provided at `.github/workflows/pages.yml`. Set GitHub Pages Source to **GitHub Actions** in the repository settings to deploy it.
+
+## Phase 3-C · External experiences
+
+The role-aware prototype now includes dedicated interface flows for SaaS platform administrators, renters, independent vehicle owners, chauffeurs, corporate customer approvers, brokers/agents, service partners, the Sage Auto marketing site, operator-branded storefronts and a **future-concept marketplace**. The screens use shared browser-local example records; actions such as extension requests, corporate approvals, agent referrals and service updates have meaningful cross-portal effects without pretending to confirm bookings or transfer money.
+
+- [P3-C user flows and cross-portal contracts](docs/PHASE_3C_EXTERNAL_USER_EXPERIENCES.md)
+- [P3-B company operations](docs/PHASE_3B_COMPANY_OPERATIONS.md)
+- New test suite: `node tests/external-portals.test.js`
 
 ## Status
 
