@@ -261,6 +261,7 @@ if(kind==="site-toggle"){c.db.site.published=!c.db.site.published;log(c,"Website
 if(kind==="preview-site"){c.navigate("branded","Explore vehicles");return true}
 if(kind==="plan"){c.showToast("Billing plans and entitlements are illustrative; provider connection deferred.");return true}
 return true}
+X.isUnavailable=function(id,start,end,c){init(c.db);var v=chosen(c,id);return !v||v.status==="Maintenance"||v.status==="On rental"||!v.compliant||conflicts(c,id,start,end)};
 X.init=init;X.renderPage=renderPage;X.drawer=drawer;X.action=act;X.checklist=checklist;X.openTransition=function(b,c){if(!b||!["Awaiting payment","Confirmed","Active"].includes(b.status))return false;var mode=b.status==="Awaiting payment"?"payment":b.status==="Confirmed"?"handover":"return";c.state.modal="v2:"+mode+":"+b.id;c.render();return true};
 window.SageCompanyV2=X;
 /* __MORE__ */
