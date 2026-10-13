@@ -20,7 +20,7 @@ jobs:
           node-version: '22'
       - name: JavaScript syntax (all retained and new bundles)
         run: |
-          for file in app.js company-detail.js external-portals.js gap-closure.js premium-experience.js reference-experience.js motion-studio.js ops-hardening.js experience-foundation.js; do node --check "$file"; done
+          for file in app.js company-detail.js external-portals.js gap-closure.js premium-experience.js reference-experience.js motion-studio.js ops-hardening.js experience-foundation.js onboarding-continuity.js; do node --check "$file"; done
       - name: Existing mock workflow suite
         run: npm run test:mock
       - name: Additional operational regressions
@@ -29,7 +29,9 @@ jobs:
           node tests/motion-studio.test.js
           node tests/p3f-operations.test.js
       - name: Audit-specific logic, filters and no-fake-receipt assertions
-        run: node tests/audit-wave1.test.js
+        run: |
+          node tests/audit-wave1.test.js
+          node tests/audit-onboarding.test.js
 
   browser-qa:
     name: Rendered revenue and work mode at five widths
@@ -55,7 +57,9 @@ jobs:
           cat /tmp/sage-wave1.log
           exit 1
       - name: Screenshot and workflow assertions
-        run: node tests/audit-wave1-browser.mjs
+        run: |
+          node tests/audit-wave1-browser.mjs
+          node tests/audit-onboarding-browser.mjs
       - name: Existing accessibility audit
         run: npm run test:accessibility
       - name: Upload actual screenshots and findings
