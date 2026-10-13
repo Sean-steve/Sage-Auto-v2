@@ -28,11 +28,11 @@ function chart(c,bs){
  const sampleStart=Date.UTC(2026,9,13),dayMs=86400000;
  const labels=[],series=Array(7).fill(0),buckets=Array.from({length:7},()=>[]);
  const monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
- for(let i=0;i<7;i++){const offset=Math.min(span-1,Math.floor((i+.35)*span/7)),d=new Date(sampleStart+offset*dayMs);labels.push(d.getUTCDate()+" "+monthNames[d.getUTCMonth()])}
+ for(let i=0;i<7;i++){const offset=Math.min(span-1,Math.floor((i+.35)*span/7)),d=new Date(sampleStart+offset*dayMs);labels.push(span===1?String(i*4).padStart(2,"0")+":00":d.getUTCDate()+" "+monthNames[d.getUTCMonth()])}
  bs.forEach(b=>{const match=String(b.date||"").match(/(\d{1,2})\s+([a-z]{3})/i);if(!match)return;const month=monthNames.findIndex(m=>m.toLowerCase()===match[2].toLowerCase());if(month<0)return;
  const start=Date.UTC(2026,month,Number(match[1])),offset=Math.round((start-sampleStart)/dayMs);
  if(offset<0||offset>=span)return;
- const bucket=Math.min(6,Math.floor(offset*7/span));series[bucket]+=unit(b.total);buckets[bucket].push(b)});
+ const tm=String(b.date||"").match(/(\d{1,2}):(\d{2})/),hour=tm?Number(tm[1]):12;const bucket=span===1?Math.min(6,Math.floor(hour*7/24)):Math.min(6,Math.floor(offset*7/span));series[bucket]+=unit(b.total);buckets[bucket].push(b)});
  const gross=series.reduce((a,b)=>a+b,0),maximum=Math.max(...series,1),w=690,h=218,pad=22;
  const pts=series.map((v,i)=>[pad+i*(w-2*pad)/6,h-28-(v/maximum)*148]);
  const area="M"+pts[0][0]+","+(h-28)+" L"+pts.map(p=>p.join(",")).join(" L")+" L"+pts[6][0]+","+(h-28)+" Z";
@@ -95,11 +95,16 @@ const p=s.indexOf('<section class="p-public-cover">');
 if(p>=0){let end=s.indexOf("</section>",p);if(end>=0)s=s.slice(0,p)+hero+s.slice(end+10)}
 else {let q=s.indexOf('<main id="main-content">');if(q>=0)s=s.slice(0,q+24)+hero+s.slice(q+24)}
 return s}
-function toolbar(c,s){if(["marketing","branded","marketplace"].includes(c.state.portal))return s;const quick='<div class="sx-context-strip" aria-label="Quick workspace actions"><div class="sx-location-note"><span class="sx-live-pulse"></span><span>YOUR STUDIO</span><b>'+esc(c,c.state.page)+'</b></div><div class="sx-context-actions">'+act(c,"⌕ Quick find","command","sx-context-link")+act(c,icon(c,"plus",14)+" Create booking","new-booking","sx-context-link sx-strong")+act(c,state.theme==="night"?"☼ Day view":"☾ Night view","studio:theme","sx-context-link")+'</div></div>';
-s=s.replace('<main class="page" id="main-content">','<main class="page" id="main-content">'+quick);
-return s}
+function toolbar(c,s){if(["marketing","branded","marketplace"].includes(c.state.portal))return s;
+ const isOperator=c.state.portal==="company",pinned=isOperator?state.favourites.slice(0,5):[];
+ const pins=isOperator?'<div class="sx-pins" aria-label="Pinned modules">'+pinned.map(n=>act(c,esc(c,n),"studio:go:"+n,"sx-pin"+(c.state.page===n?" active":""))).join("")+'</div>':"";
+ const isPinned=state.favourites.includes(c.state.page);
+ const pinBtn=isOperator?act(c,(isPinned?"★":"☆")+" "+(isPinned?"Pinned":"Pin page"),"studio:pin","sx-context-link",""):"";
+ const quick='<div class="sx-context-strip" aria-label="Workspace shortcuts"><div class="sx-location-note"><span class="sx-live-pulse"></span><span>YOUR STUDIO</span><b>'+esc(c,c.state.page)+'</b></div><div class="sx-context-actions">'+pins+pinBtn+act(c,"⌕ Find","command","sx-context-link")+act(c,icon(c,"plus",14)+" Create booking","new-booking","sx-context-link sx-strong")+act(c,state.theme==="night"?"☼ Day":"☾ Night","studio:theme","sx-context-link")+'</div></div>';
+ return s.replace('<main class="page" id="main-content">','<main class="page" id="main-content">'+quick)}
 function shell(c){try{document.body.setAttribute("data-studio-theme",state.theme);document.body.classList.add("sage-studio")}catch(e){}}
 function action(name,node,c){if(!name.startsWith("studio:"))return false;const cmd=name.slice(7);
+if(cmd==="pin"){const item=c.state.page;if(state.favourites.includes(item)){state.favourites=state.favourites.filter(x=>x!==item)}else{state.favourites=[...state.favourites,item].slice(-5)}save();c.render();return true}
 if(cmd==="theme"){state.theme=state.theme==="night"?"light":"night";save();c.render();return true}
 if(cmd.startsWith("go:")){c.navigate(c.state.portal,cmd.slice(3));return true}
 if(cmd.startsWith("lane:")){state.lane=cmd.slice(5);c.render();return true}
