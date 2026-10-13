@@ -97,6 +97,19 @@ let transformed=html;
 if(ix>=0){const next=html.indexOf("</section>",ix);if(next>=0)transformed=html.slice(0,ix)+banner+html.slice(next+10)}
 else {const fallback='<section class="public-hero">',i2=html.indexOf(fallback),n2=html.indexOf("</section>",i2);if(i2>=0&&n2>=0)transformed=html.slice(0,i2)+banner+html.slice(n2+10);else if(portal==="branded")transformed=html.replace('<main id="main-content">','<main id="main-content">'+banner)}
 return '<div class="p-premium-public p-public-'+portal+'">'+transformed+'</div>'}
+
+function decorateOverlay(c,markup){if(c.state.portal!=="company"||c.state.modal!=="booking"||!markup.includes('class="drawer-body"'))return markup;
+const v=c.db.vehicles.find(x=>x.id===(c.state.form?.vehicle||"V01"))||c.db.vehicles[0],duration=Number(c.state.form?.days||2);
+const step=Number(c.state.step||1);
+const progress='<div class="p-booking-step-labels" aria-label="Booking wizard progress"><span class="'+(step===1?"active":"")+'">01 · Renter & car</span><span class="'+(step===2?"active":"")+'">02 · Pricing</span><span class="'+(step===3?"active":"")+'">03 · Confirm</span></div>';
+const preview='<div class="p-booking-preview"><div class="p-booking-preview-image">'+c.vehicleSvg(v.color)+'</div><div class="p-booking-preview-copy"><span class="p-overline">YOUR SELECTED VEHICLE</span><strong>'+esc(c,v.name)+'</strong><span>'+esc(c,v.plate)+' · '+esc(c,v.type)+'</span></div><div class="p-booking-preview-price"><strong>'+money(c,v.rate*duration)+'</strong><small>example subtotal</small></div></div>';
+let html=markup.replace('<div class="steps">',progress+preview+'<div class="steps">');
+if(step===1){
+const cars=c.db.vehicles.filter(x=>x.status==="Available").slice(0,4);
+const chooser='<div class="p-car-chooser"><div class="p-car-chooser-title"><span class="p-overline">CHOOSE YOUR VEHICLE</span><small>Tap to update the booking</small></div><div class="p-car-chooser-grid">'+cars.map(car=>'<button type="button" class="p-car-choice '+(car.id===v.id?"selected":"")+'" data-action="premium:chooseCar:'+esc(c,car.id)+'" aria-pressed="'+(car.id===v.id)+'"><span>'+c.vehicleSvg(car.color)+'</span><strong>'+esc(c,car.name)+'</strong><small>'+money(c,car.rate)+'/day</small></button>').join("")+'</div></div>';
+html=html.replace('<div class="form-grid">',chooser+'<div class="form-grid">');
+}
+return html}
 function applyShell(){try{const stored=localStorage.getItem(storeKey);if(stored){const p=JSON.parse(stored);if(p.fleetView==="list"||p.fleetView==="gallery")state.fleetView=p.fleetView;if(p.density==="comfortable"||p.density==="compact")state.density=p.density}}catch(e){}}
 function styleShell(c){const portal=c.state.portal;try{document.body.setAttribute("data-premium-portal",portal);document.body.classList.toggle("p-density-compact",state.density==="compact")}catch(e){}}
 function run(action,node,c){if(!action.startsWith("premium:"))return false;const cmd=action.slice(8);if(cmd.startsWith("route:")){c.navigate(c.state.portal,cmd.slice(6));return true}
@@ -104,12 +117,13 @@ if(cmd.startsWith("queue:")){state.queue=cmd.slice(6);c.render();return true}
 if(cmd.startsWith("spotlight:")){state.spotlight=(state.spotlight+Number(cmd.slice(10))+c.db.vehicles.length)%c.db.vehicles.length;c.render();return true}
 if(cmd.startsWith("fleetFilter:")){state.fleetFilter=cmd.slice(12);c.render();return true}
 if(cmd.startsWith("fleetView:")){state.fleetView=cmd.slice(10);savePrefs();c.render();return true}
+if(cmd.startsWith("chooseCar:")){const id=cmd.slice(10),car=c.db.vehicles.find(x=>x.id===id);if(car&&car.status==="Available"){c.state.form.vehicle=car.id;c.render()}return true}
 if(cmd==="density"){state.density=state.density==="compact"?"comfortable":"compact";savePrefs();c.render();c.showToast("Display density: "+state.density+".");return true}
 if(cmd==="public-start"){c.navigate("marketing","Features");return true}
 if(cmd==="checkout"){c.navigate("branded","Checkout & review");return true}
 if(cmd==="browse"){c.navigate("marketplace","Browse cars");return true}
 return false}
 function savePrefs(){try{localStorage.setItem(storeKey,JSON.stringify({fleetView:state.fleetView,density:state.density}))}catch(e){}}
-P.company=company;P.roleHome=roleHero;P.public=enhancePublic;P.shell=styleShell;P.action=run;P.photo=photo;P.apply=applyShell;P.state=state;
+P.decorateOverlay=decorateOverlay;P.company=company;P.roleHome=roleHero;P.public=enhancePublic;P.shell=styleShell;P.action=run;P.photo=photo;P.apply=applyShell;P.state=state;
 applyShell();window.SagePremiumV2=P;
 })();
