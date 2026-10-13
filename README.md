@@ -42,6 +42,15 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
 - Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
 
+## P3-F · Operational UX Hardening
+
+Sage Auto's company Overview is now **Work Mode by default**: clickable urgency KPIs, a compact and selectable Departure Board, an action-required rail, branch context, collapsible navigation, status counts, keyboard shortcuts, staff **focus lenses (visual only)** and a personal follow-up flag tool that **never changes booking data**. The expressive Motion Studio welcome is still available as an optional view.
+
+- [P3-F scope, interaction rules and acceptance gates](docs/P3F_OPERATIONS_HARDENING.md)
+- Run `node tests/p3f-operations.test.js`
+- Manual responsive screenshot run: GitHub Actions → **Premium UI · Browser Visual Review**
+- Real payments, notifications, role permissions and production branch filtering are **not** connected.
+
 ## Motion Studio — Creative Automotive Redesign
 
 The latest front-end art direction is **Motion Studio**: a bespoke midnight/porcelain/coral/acid-lime operating system with an asymmetrical company cockpit, filtered departure board, example-booking analytics, actionable fleet stage, pinned shortcuts and day/night appearance. Renter, owner, driver, corporate, agent, service partner and platform home screens now have distinct editorial presentations; public website first impressions have also been reconstructed.
