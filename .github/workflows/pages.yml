@@ -27,6 +27,7 @@ jobs:
           node tests/company-workflows.test.js
           node tests/company-edge-cases.test.js
           node tests/external-portals.test.js
+          node tests/p3d-quality.test.js
       - name: Verify frontend assets exist
         run: |
           test -s index.html
