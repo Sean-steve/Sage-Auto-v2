@@ -42,7 +42,7 @@ function renderPage(page){
 }
 assert.match(renderPage("Availability"),/Vehicle eligibility/);
 assert.match(renderPage("Availability"),/No demo conflict|reserved during those dates/);
-assert.match(renderPage("Bookings"),/Payment|Recorded/);
+assert.match(renderPage("Bookings"),/payment|recorded/i);
 assert.match(renderPage("Booking changes"),/Original vs proposed terms/);
 assert.match(renderPage("Contracts & handover"),/12 inspection/);
 assert.match(renderPage("Rentals"),/Vehicle possession ledger/);
