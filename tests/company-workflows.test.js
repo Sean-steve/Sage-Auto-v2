@@ -53,7 +53,7 @@ navigate("Bookings");click("booking-action",undefined,"SA-1044");has("BOOKING DE
 setInputs({booking:"SA-1044",amount:"12000",method:"M-Pesa (manual demo)",ref:"DEMO-888"});
 submit("payment","SA-1044");
 assert.equal(scope().bookings.find(x=>x.id==="SA-1044").status,"Confirmed");
-click("booking-action",undefined,"SA-1044");click("advance",undefined,"SA-1044");has("Contract &amp; handover".replace("&amp;","&"));
+click("booking-action",undefined,"SA-1044");click("advance",undefined,"SA-1044");has("Contract &amp; handover");
 setInputs({contract:true,defects:false});
 checks=Array.from({length:12},()=>({checked:false}));submit("handover","SA-1044");assert.equal(scope().bookings.find(x=>x.id==="SA-1044").status,"Confirmed","incomplete inspection blocks handover");
 allChecks();submit("handover","SA-1044");
