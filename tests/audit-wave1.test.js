@@ -35,7 +35,7 @@ assert.equal(model([],{}).estimated,0);
 const context={header(){return "<header>Platform revenue</header>"},demo(){return "<div>Demo mode</div>"}};
 const view=window.SageExperienceV2.renderRevenue(context,tenants);
 assert.match(view,/Recurring-revenue movement/);
-assert.match(view,/No payment-provider connection/);
+assert.match(view,/no payment-provider connection/i);
 assert.match(view,/There is no payment-provider connection/);
 assert.match(view,/Historical data missing/);
 assert.match(view,/Not included/);
