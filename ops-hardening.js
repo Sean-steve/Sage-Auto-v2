@@ -64,7 +64,7 @@ if(x==="attention"){let el=document.getElementById?.("op-attention");if(el?.scro
 if(x.startsWith("go:")){c.navigate("company",x.slice(3));return true}
 if(x.startsWith("lane:")){p.lane=x.slice(5);p.selected=[];c.render();return true}
 if(x.startsWith("metric:"))return metricGo(c,x.slice(7));
-if(x.startsWith("asset:")){c.navigate("company","Fleet");return true}
+if(x.startsWith("asset:")){const id=x.slice(6);c.state.modal="v2:asset:"+id;c.render();return true}
 if(x==="clear"){p.selected=[];c.render();return true}
 if(x==="flag"){p.marked=[...new Set([...p.marked,...p.selected])];p.selected=[];save();c.render();c.showToast("Personal follow-up flags saved in this browser.");return true}
 if(x==="review"){const id=p.selected[0];if(id){c.state.modal="detail:"+id;c.render()}return true}
