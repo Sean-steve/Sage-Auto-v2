@@ -60,7 +60,7 @@ screen("service","Overview");here("p-role-service");
 screen("platform","Overview");here("p-role-platform");here("The Sage Auto network");
 screen("marketing","Home");here("p-public-cover");here("Built for the");here('id="main-content"');
 click("premium:public-start");here("Everything a car hire business needs");
-screen("branded","Explore vehicles");here("p-public-cover");here("Find the perfect");here("Request dates");
+screen("branded","Explore vehicles");here("p-public-cover");here("Find the perfect");here("Toyota Prado TX");
 click("premium:checkout");here("RENTAL");
 screen("marketplace","Discover");here("p-public-cover");here("Your next drive");
 screen("company","Overview");here("p-command-hero");
