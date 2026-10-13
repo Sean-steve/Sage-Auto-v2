@@ -242,6 +242,11 @@ if(type==="save-business"){if(!val("company")||!val("contact")){c.showToast("Ent
 if(type==="go-checkout"){db.checkout.step=1;c.save();c.navigate("branded","Checkout & review");return true}
 if(type==="checkout-vehicle"){var selected=vehicle(c,id);if(!selected||selected.status!=="Available"||!selected.compliant){c.showToast("This car is not ready for enquiries.");return true}db.checkout.vehicle=id;db.checkout.step=1;c.save();c.navigate("branded","Checkout & review");return true}
 if(type==="checkout-back"){db.checkout.step=Math.max(1,db.checkout.step-1);return save(c,"Returned to previous review step.")}
+if((type==="checkout-next"&&db.checkout.step===1||type==="checkout-submit")&&window.SageRentalJourneyV2){
+ var chk=db.checkout;var proposal={vehicle:val("vehicle")||chk.vehicle,pickup:val("pickup")||chk.pickup,days:val("days")||chk.days};
+ var outcome=window.SageRentalJourneyV2.checkoutGuard(c,proposal);
+ if(!outcome.ok){c.showToast(outcome.message);return true;}
+}
 if(type==="checkout-next"){var step=db.checkout.step;if(step===1){var v=val("vehicle")||db.checkout.vehicle,start=val("pickup")||db.checkout.pickup,days=+(val("days")||db.checkout.days);if(!demoDate(start)||start<"2026-10-13"||!positive(days)){c.showToast("Choose a valid pickup date and rental duration.");return true}var veh=vehicle(c,v);if(!veh||veh.status!=="Available"||!veh.compliant){c.showToast("That example car is unavailable. Choose a different vehicle.");return true}db.checkout.vehicle=v;db.checkout.pickup=start;db.checkout.days=days}
 if(step===2){if(!val("customer")||!val("contact")){c.showToast("Enter your name and contact for the enquiry.");return true}db.checkout.customer=val("customer");db.checkout.contact=val("contact")}
 db.checkout.step=Math.min(3,step+1);return save(c,"Review next step of rental enquiry.")}
