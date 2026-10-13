@@ -3,3 +3,10 @@
 @media(max-width:900px){.d2-stepper{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.d2-step{flex-direction:column;align-items:flex-start;gap:5px;padding:9px}.d2-public-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.d2-public-main{padding:29px 16px 60px}.d2-stepper{display:flex;overflow-x:auto;margin:15px 0 18px;gap:7px}.d2-step{min-width:112px;flex-direction:row;align-items:center}.d2-public-grid,.d2-plan-grid{grid-template-columns:1fr}.d2-plan-grid{margin:9px 14px}.d2-launch-list{padding:8px 14px}.d2-launch-row{align-items:flex-start;flex-wrap:wrap}.d2-launch-row .button{width:100%}.d2-public-main .section-block .form-grid,.drawer-body #d2-form .form-grid{grid-template-columns:1fr}.d2-public-main .section-block .pad-22{padding:15px}.d2-public-main .surface-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.d2-plan{transition:none}}
+
+/* Compact viewport reconciliation: preserve action visibility without header overflow */
+.breadcrumbs{min-width:0;overflow:hidden}.breadcrumbs b,.breadcrumbs span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.breadcrumbs b{max-width:min(42vw,310px)}.top-controls{flex-shrink:0}
+.public-nav{gap:10px}.public-brand{min-width:0;max-width:calc(100% - 155px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.public-nav>.row-actions{flex-shrink:0}
+@media(max-width:700px){.public-nav .row-actions>.button:first-child{display:none}.public-brand{font-size:19px;max-width:calc(100% - 150px)}.public-brand .brand-mark{flex-shrink:0}}
+@media(max-width:390px){.public-nav .row-actions>.button{padding:8px 10px;font-size:11px;white-space:nowrap}.topbar .breadcrumbs b{max-width:42vw}.d2-public-main>h1{line-height:1.17}}
