@@ -301,7 +301,29 @@ if(kind==="service-evidence"){var job=db.works.find(function(w){return w.id===id
 if(kind==="support-new"){db.support.unshift({id:"SUP-"+stamp,from:g("company"),topic:g("topic"),priority:g("priority"),status:"Open"});audit(c,"Support case",g("company")+" · "+g("topic"));return persist(c,"Demo support case created.")}
 if(kind==="public-enquiry"||kind==="sign-up"){db.publicEnquiries.unshift({id:"WEB-"+stamp,name:g("name"),contact:g("contact"),message:g("message"),source:kind,status:"New enquiry"});if(kind==="public-enquiry")db.leads.unshift({id:"L-"+stamp,name:g("name")+" · contact enquiry",source:"Rental website",status:"New"});audit(c,"Public enquiry",kind+" · "+g("name"));return persist(c,"Enquiry saved to the demo pipeline; no account created.")}
 return true}
-/* __CONTINUE__ */
+
+function handle(action,node,c){if(!action.startsWith("p3c:"))return false;seed(c.db);var p=action.slice(4),id=node.getAttribute("data-id")||"",db=c.db,x;
+if(p==="switcher"){c.state.command="portals";c.render();return true}
+if(p.startsWith("page:")){c.navigate(c.state.portal,p.slice(5));return true}
+if(p==="open-renter"){c.navigate("renter","Overview");return true}
+if(p==="go-workspace"){c.navigate(c.state.portal==="marketing"?"company":"renter","Overview");return true}
+if(p==="explore"){var arr=c.state.portal==="platform"?"Companies":c.state.portal==="renter"?"My bookings":c.state.portal==="owner"?"My vehicles":c.state.portal==="driver"?"Assignments":c.state.portal==="corporate"?"Travel requests":c.state.portal==="agent"?"Leads":"Assigned jobs";c.navigate(c.state.portal,arr);return true}
+if(p==="close"){c.state.modal=null;c.render();return true}
+if(p.startsWith("submit:"))return submit(c,p.slice(7));
+if(["car","booking","owner-car","owner-booking","statement","driver-job","tenant","support","travel","corporate-person","referral","service-job","extend","message","request-car","travel-new","employee-new","referral-new","service-evidence","support-new","public-enquiry","sign-up"].includes(p)){c.state.modal="p3c:"+p+":"+(id||"");c.render();return true}
+if(p==="notification"){db.renterProfile.notifications=!db.renterProfile.notifications;audit(c,"Notification preference",String(db.renterProfile.notifications));return persist(c,"Demo preference updated.")}
+if(p==="save-car"){if(!veh(c,id)){c.showToast("Vehicle not found.");return true}if(db.savedVehicles.includes(id))db.savedVehicles=db.savedVehicles.filter(function(x){return x!==id});else db.savedVehicles.push(id);audit(c,"Saved vehicle",id);return persist(c,"Saved vehicle list updated in this browser.")}
+if(p.startsWith("job-")){x=db.driverJobs.find(function(j){return j.id===id&&j.driver===db.driverProfile.name});if(!x)return true;var expected={"job-accept":"Assigned","job-arrive":"Accepted","job-complete":"At pickup"}[p],next={"job-accept":"Accepted","job-arrive":"At pickup","job-complete":"Completed"}[p];if(x.status!==expected){c.showToast("Assignment status has changed; review it again.");return true}x.status=next;audit(c,"Driver dispatch update",x.id+" · "+next);return persist(c,"Driver assignment updated; rental state unchanged.")}
+if(p==="duty"){db.driverProfile.onDuty=!db.driverProfile.onDuty;audit(c,"Driver duty",db.driverProfile.onDuty?"On duty":"Off duty");return persist(c,"Your demo duty status is updated.")}
+if(p==="tenant-approve"){x=db.tenants.find(function(t){return t.id===id});if(!x||x.status!=="Needs review")return true;x.status="Active";audit(c,"Tenant review",x.name+" · approved for demo");return persist(c,"Company marked active in preview; no tenant provisioned.")}
+if(p==="tenant-plan"){x=db.tenants.find(function(t){return t.id===id});if(!x)return true;var plans=["Starter","Growth","Pro"];x.plan=plans[(plans.indexOf(x.plan)+1)%plans.length];audit(c,"Plan preview",x.name+" → "+x.plan);return persist(c,"Demo plan changed; no billing or entitlement update.")}
+if(p==="support-resolve"){x=db.support.find(function(t){return t.id===id});if(!x)return true;x.status="Resolved";audit(c,"Support case",id+" resolved");return persist(c,"Support case marked resolved (demo).")}
+if(p==="travel-approve"||p==="travel-decline"){x=db.travel.find(function(t){return t.id===id});if(!x||x.status!=="Awaiting approval")return true;x.status=p==="travel-approve"?"Approved":"Declined";if(x.status==="Approved"){var lead="L-"+Date.now();x.operatorLead=lead;db.leads.unshift({id:lead,name:x.employee+" · "+x.trip,source:"Corporate approved request",status:"New"})}audit(c,"Corporate travel decision",x.id+" · "+x.status);return persist(c,x.status==="Approved"?"Request approved and operator lead created; reservation not yet confirmed.":"Travel request declined; no reservation created.")}
+if(p==="service-accept"||p==="service-submit"){x=db.works.find(function(w){return w.id===id&&w.supplier==="City Auto Care"});if(!x)return true;var up=db.serviceUpdates.find(function(u){return u.work===id});if(!up){up={id:"UP-"+Date.now(),work:id,stage:"Assigned",notes:"",evidence:[]};db.serviceUpdates.push(up)}if(p==="service-accept"&&up.stage==="Assigned")up.stage="Accepted";else if(p==="service-submit"&&up.stage==="Accepted")up.stage="Submitted for operator review";else{c.showToast("This job cannot move to that state.");return true}audit(c,"Service partner update",id+" · "+up.stage);return persist(c,"Workshop progress updated; operator close-out remains separate.")}
+c.showToast("This prototype action is not connected.");return true}
+M.init=seed;M.renderPortal=appRender;M.renderPublic=publicRender;M.drawer=dialog;M.action=handle;M.sides=SIDES;
+window.SageExternalV2=M;
+
 
 
 
