@@ -25,6 +25,10 @@ Phase 2 identified **11 experience surfaces, 215 proposed screen contracts, 22 m
 | Service partner | Role-specific home and module navigation |
 | Future marketplace | Separate future-labelled discovery experience |
 
+### Company workflow expansion
+
+P3-B adds 24 dedicated company pages covering fleet registration and profiles; owners/agreements; customers and driver verification; 12-area inspections; maintenance; daily pricing; collision-aware availability holds; contracts and handover; returns and final charges; media and compliance attachment options; receipts, deposits, expenses, settlements; lead stages; business insights; branded website preview; branches, staff and permissions; subscription, integrations and audit. See `docs/PHASE_3B_COMPANY_OPERATIONS.md` for the implementation and exclusions.
+
 ### Core interactions implemented
 
 1. Switch between all 11 experience surfaces using an experience preview switcher.
@@ -55,7 +59,7 @@ These are frontend simulations ONLY: they do not validate compliance, confirm re
 
 ## Next Phase 3 batches
 
-**P3-B · Company workflow detail:** Replace module shells with individually designed forms, views and interaction states for fleet onboarding, ownership, rate rules, holds, customer and driver verification, contracts, inspections, extensions, returns, refunds, payments, owner settlements, employees/branches and website studio.
+**P3-B · Company workflow detail:** Dedicated company interfaces and mock flows are implemented for the listed modules. Still missing deeper rental extensions, dedicated incident/dispute resolution, and real contract/document verification. Full production behavior is reserved for backend reconciliation.
 
 **P3-C · External role experiences:** Complete dedicated workflows and screens for renter, owner, driver, agent, corporate, partner, platform administration, marketing and branded rental website. Add role-specific edge cases.
 
