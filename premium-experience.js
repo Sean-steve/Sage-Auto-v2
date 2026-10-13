@@ -126,5 +126,6 @@ if(cmd==="browse"){c.navigate("marketplace","Browse cars");return true}
 return false}
 function savePrefs(){try{localStorage.setItem(storeKey,JSON.stringify({fleetView:state.fleetView,density:state.density}))}catch(e){}}
 P.captureBooking=captureBooking;P.decorateOverlay=decorateOverlay;P.company=company;P.roleHome=roleHero;P.public=enhancePublic;P.shell=styleShell;P.action=run;P.photo=photo;P.apply=applyShell;P.state=state;
+try{document.addEventListener("error",function(event){const el=event.target;if(el&&el.classList&&el.classList.contains("p-car-photo")&&el.style)el.style.display="none"},true)}catch(e){}
 applyShell();window.SagePremiumV2=P;
 })();
