@@ -199,7 +199,62 @@ case "policy":{var x=db.policyEntries.find(t=>t.id===id);if(!x)return "";title=x
 default:return ""}
 if(!title)return "";
 return '<div class="modal-backdrop" data-action="close-outside"><section class="drawer" role="dialog" aria-modal="true" aria-label="'+h(c,title)+'"><div class="drawer-header"><div><span class="eyebrow">PHASE 3-D.2 · FRONTEND-ONLY</span><h2>'+h(c,title)+'</h2><p class="muted">Sample records · no live services connected</p></div><button class="icon-button" aria-label="Close" data-action="close">'+ic(c,"close")+'</button></div><div class="drawer-body"><form id="d2-form">'+content+'</form></div><div class="drawer-footer">'+btn(c,"Close","close")+(cta?btn(c,cta,"submit:"+mode+":"+id,null,"primary"):extra)+'</div></section></div>'}
-/* __CONTINUE__ */
+
+/* Action engine: records only preview intentions; no real transaction/authorization */
+function val(name){var root=document.getElementById("d2-form")||document,el=root.querySelector&&root.querySelector('[name="'+name+'"]');return el?String(el.value||"").trim():""}
+function positive(v){return Number.isFinite(Number(v))&&Number(v)>0}
+function act(action,node,c){if(!action.startsWith("p3d2:"))return false;seed(c.db);var cmd=action.slice(5),id=node.getAttribute("data-id")||"",db=c.db,side=c.state.portal,p=cmd.split(":"),type=p[0],rest=p.slice(1).join(":"),x,b;
+if(type==="open"){c.state.modal="p3d2:"+rest+":"+(id||"");c.render();return true}
+if(type==="close"){c.state.modal=null;c.render();return true}
+if(type==="page"){c.navigate(side,rest);return true}
+if(type==="company"){c.navigate("company",rest);return true}
+if(type==="to-company"){c.navigate("company","Overview");return true}
+if(type==="to-renter"){c.navigate("renter","Overview");return true}
+if(type==="guide"){c.showToast("This is a frontend preview; review the contract status and next steps.");return true}
+if(type==="launch-toggle"){if(!(id in db.onboarding))return true;db.onboarding[id]=!db.onboarding[id];return save(c,"Demo readiness step updated.");}
+if(type==="notice-read"){x=db.platformNotices.find(t=>t.id===id);if(x){x.status="Read";return save(c,"Platform notice marked read in preview.")}return true}
+if(type==="amend-approve"||type==="amend-decline"){x=db.bookingChanges.find(t=>t.id===id&&t.status==="Pending review");if(!x)return true;x.status=type==="amend-approve"?"Approved in principle":"Declined";return save(c,"Change decision stored; rental dates and amounts remain unchanged.")}
+if(type==="offer-toggle"){x=db.offers.find(t=>t.id===id);if(x){x.status=x.status==="Draft"?"Active":"Draft";return save(c,"Offer visibility changed in demo; checkout discounts unaffected.")}return true}
+if(type==="refund-approve"||type==="refund-reject"){x=db.refundReviews.find(t=>t.id===id&&t.status==="Awaiting approval");if(!x)return true;x.status=type==="refund-approve"?"Approved":"Rejected";return save(c,"Refund review decision stored; no funds moved.")}
+if(type==="provision-reviewed"){x=db.tenantTasks.find(t=>t.id===id);if(x){x.status="Reviewed; not provisioned";return save(c,"Provisioning request reviewed; no tenant created.")}return true}
+if(type==="platform-review"){x=db.platformEvents.find(t=>t.id===id);if(x){x.status="In review";return save(c,"Incident triage saved in demo.")}return true}
+if(type==="auth-preview"||type==="auth-recovery"){c.showToast("Authentication is not connected. Do not enter real account credentials.");return true}
+if(type==="plan-select"){db.signup.plan=id;return save(c,"Demo plan preference selected; no charge made.")}
+if(type==="verify-demo"){if(val("verification")!=="123456"){c.showToast("Enter the example verification code shown on this screen.");return true}db.signup.emailVerified=true;c.save();c.navigate("marketing","Business setup");c.showToast("Demo code accepted; no real email verification performed.");return true}
+if(type==="save-business"){if(!val("company")||!val("contact")){c.showToast("Enter the company name and contact before continuing.");return true}db.signup.company=val("company");db.signup.contact=val("contact");db.signup.region=val("region");c.save();c.navigate("marketing","Choose plan");return true}
+if(type==="checkout-back"){db.checkout.step=Math.max(1,db.checkout.step-1);return save(c,"Returned to previous review step.")}
+if(type==="checkout-next"){var step=db.checkout.step;if(step===1){var v=val("vehicle")||db.checkout.vehicle,start=val("pickup")||db.checkout.pickup,days=+(val("days")||db.checkout.days);if(!demoDate(start)||start<"2026-10-13"||!positive(days)){c.showToast("Choose a valid pickup date and rental duration.");return true}var veh=vehicle(c,v);if(!veh||veh.status!=="Available"||!veh.compliant){c.showToast("That example car is unavailable. Choose a different vehicle.");return true}db.checkout.vehicle=v;db.checkout.pickup=start;db.checkout.days=days}
+if(step===2){if(!val("customer")||!val("contact")){c.showToast("Enter your name and contact for the enquiry.");return true}db.checkout.customer=val("customer");db.checkout.contact=val("contact")}
+db.checkout.step=Math.min(3,step+1);return save(c,"Review next step of rental enquiry.")}
+if(type==="checkout-submit"){var check=document.getElementById("d2-consent");if(!check||!check.checked){c.showToast("Acknowledge this is a non-binding rental request.");return true}var q=db.checkout,v=vehicle(c,q.vehicle);if(!v||v.status!=="Available"||!v.compliant){c.showToast("Vehicle readiness changed. Choose another car.");return true}
+if(!q.customer||!q.contact||!demoDate(q.pickup)){c.showToast("The enquiry is incomplete.");return true}
+var record={id:"WEB-"+Date.now(),name:q.customer,contact:q.contact,vehicle:q.vehicle,pickup:q.pickup,days:q.days,source:"Branded checkout demo",status:"Awaiting operator review",quotedAmount:quote(c,q.vehicle,q.days)};
+db.quoteRequests.unshift(record);db.publicEnquiries.unshift(record);db.leads.unshift({id:"L-"+Date.now(),name:q.customer+" · "+v.name,source:"Website checkout enquiry",status:"New"});db.checkout.step=4;return save(c,"Quote enquiry saved for operator review; no booking or payment made.")}
+if(type==="submit"){var mode=rest.split(":")[0],key=rest.split(":").slice(1).join(":"),t=Date.now();var change,amount;
+if(mode==="register"){if(!val("email")||!val("contact")||!val("email").includes("@")){c.showToast("Enter a valid demo work email and contact name.");return true}db.signup.email=val("email");db.signup.contact=val("contact");db.signup.accountCreated=true;c.save();c.state.modal=null;c.navigate("marketing","Verify email");return true}
+if(mode==="amend"){b=db.bookings.find(x=>x.id===val("booking"));if(!b){c.showToast("Choose an existing reservation.");return true}change=val("changeType");if(!change||!val("reason")){c.showToast("Choose a change and describe the reason.");return true}if(change!=="Cancel reservation"&&!demoDate(val("date"))){c.showToast("Choose a valid requested date.");return true}
+if(db.bookingChanges.some(x=>x.booking===b.id&&x.status==="Pending review")){c.showToast("A change request is already pending for "+b.customer+".");return true}
+db.bookingChanges.unshift({id:"CH-"+t,booking:b.id,changeType:change,date:val("date"),days:Number(val("days")||2),reason:val("reason"),status:"Pending review"});return save(c,"Change request saved; booking has not been modified.")}
+if(mode==="dispatch"){b=db.bookings.find(x=>x.id===val("booking"));var driver=val("driver");if(!b||!driver||!val("pickup")||!val("dropoff")){c.showToast("Complete the booking, driver and route details.");return true}
+if(db.driverJobs.some(x=>x.booking===b.id&&x.driver===driver&&x.status!=="Completed")){c.showToast("An active assignment already exists for this driver and booking.");return true}
+db.driverJobs.unshift({id:"DA-"+t,booking:b.id,driver,start:b.date,pickup:val("pickup"),dropoff:val("dropoff"),status:"Assigned"});db.dispatch.unshift({id:"ASG-"+t,booking:b.id,driver,status:"Dispatched"});return save(c,"Chauffeur assigned in demo; no rental handover triggered.")}
+if(mode==="availability-policy"){var nums=["bufferHours","minLeadHours","maxDays"].map(n=>Number(val(n)));if(nums.some(n=>!Number.isFinite(n)||n<0)||nums[2]<1||nums[2]>365){c.showToast("Enter valid hours and a maximum duration of 1–365 days.");return true}
+db.availabilityPolicy={bufferHours:nums[0],minLeadHours:nums[1],maxDays:nums[2]};return save(c,"Demo availability policy updated; not enforced by backend.")}
+if(mode==="offer"){amount=Number(val("amount"));if(!val("code")||!positive(amount)||!demoDate(val("expires"))){c.showToast("Enter a code, positive discount and valid expiry.");return true}if(val("type")==="Percent"&&amount>100){c.showToast("A percentage discount cannot exceed 100%.");return true}
+if(db.offers.some(x=>x.code.toLowerCase()===val("code").toLowerCase())){c.showToast("That offer code already exists.");return true}
+db.offers.unshift({id:"OF-"+t,code:val("code").toUpperCase(),type:val("type"),amount,status:"Draft",expires:val("expires")});return save(c,"Draft offer created; not applied to checkout.")}
+if(mode==="refund"){var dep=db.deposits.find(x=>x.id===key);amount=Number(val("amount"));if(!dep||!positive(amount)||amount>dep.amount||!val("reason")){c.showToast("Enter an eligible deposit amount and reason.");return true}
+if(db.refundReviews.some(x=>x.deposit===dep.id&&x.status!=="Rejected")){c.showToast("A refund review is already attached to this deposit.");return true}
+db.refundReviews.unshift({id:"RR-"+t,deposit:dep.id,amount,reason:val("reason"),status:"Awaiting approval"});dep.status="Refund review";return save(c,"Refund decision requested; no payment was sent.")}
+if(mode==="provision"){db.tenantTasks.unshift({id:"PR-"+t,company:val("company"),requestedPlan:val("plan"),notes:val("notes"),status:"Awaiting review"});return save(c,"Demo provisioning request created; no actual tenant.");}
+if(mode==="tenant-plan"){x=db.tenants.find(z=>z.id===key);if(!x)return true;db.tenantTasks.unshift({id:"PR-"+t,company:x.name,requestedPlan:val("plan"),notes:"Subscription change review; currently "+x.plan,status:"Awaiting review"});return save(c,"Plan review created; current plan and billing unchanged.")}
+if(mode==="platform-incident"){if(!val("subject")){c.showToast("Enter a platform incident summary.");return true}db.platformEvents.unshift({id:"INC-OPS-"+t,subject:val("subject"),severity:val("severity"),notes:val("notes"),status:"Open"});return save(c,"Example platform incident saved.")}
+if(mode==="support-request"){if(!val("reason")){c.showToast("Support access must include a justification.");return true}db.supportAccess.unshift({id:"SAR-"+t,tenant:val("tenant"),reason:val("reason"),status:"Requested; no access",expiry:"Not granted"});return save(c,"Access request recorded; access NOT granted.")}
+return true}
+return false}
+G.seed=seed;G.companyPage=companyPage;G.platformPage=platformPage;G.publicPage=publicPage;G.drawer=drawer;G.action=act;
+window.SageGapV2=G;
+
 
 /* __CONTINUE__ */
 })();
