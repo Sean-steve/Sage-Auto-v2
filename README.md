@@ -42,6 +42,16 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
 - Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
 
+## Motion Studio — Creative Automotive Redesign
+
+The latest front-end art direction is **Motion Studio**: a bespoke midnight/porcelain/coral/acid-lime operating system with an asymmetrical company cockpit, filtered departure board, example-booking analytics, actionable fleet stage, pinned shortcuts and day/night appearance. Renter, owner, driver, corporate, agent, service partner and platform home screens now have distinct editorial presentations; public website first impressions have also been reconstructed.
+
+- [Creative design specification, interactions and remaining QA](docs/MOTION_STUDIO_REDESIGN.md)
+- New automated smoke test: `node tests/motion-studio.test.js`
+- Screenshot review workflow: GitHub Actions → **Premium UI · Browser Visual Review**
+
+**This remains a fictional interactive frontend prototype, not a live car-hire service.** Existing domain/state workflows are preserved beneath the new presentation layer.
+
 ## Reference-informed operational UI/UX upgrade
 
 Following the five-source SaaS UI/UX study, **seven core operational screens** now use workflow-specific visuals rather than generic dashboard tables: **Availability board, Bookings pipeline, Inspection condition studio, Finance reconciliation, Pricing quote lab, Returns work queue and Owner Settlements**. Actions remain connected to the existing browser-local mock workflows.
