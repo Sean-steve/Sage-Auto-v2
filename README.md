@@ -42,6 +42,12 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
 - Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
 
+## Phase 3-D.2 · Gap closure and visual validation status
+
+[Gap closure and visual acceptance report](docs/PHASE3D2_GAP_CLOSURE.md) documents the implemented mock onboarding, checkout, company and platform flows. The updated 215-screen ledger now maps **129 interactive mock contracts, 86 partial contracts, and 0 wholly unmapped contracts**. This is **not** design-complete sign-off: browser-rendered screenshot inspection and manual WCAG review remain pending, and the 86 partial contracts need deeper finishing.
+
+Run the P3-D.2 route/interaction suite with `node tests/p3d2-gap-closure.test.js`.
+
 ## Phase 3-D · UI/UX reconciliation and audit
 
 The original **215-screen Phase 2 inventory**, **22 cross-user journeys**, and **45-screen previous company workspace** have been reconciled in:
