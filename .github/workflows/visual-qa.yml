@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "22"
       - name: Install browser testing dependency
-        run: npm install --no-save --no-package-lock playwright
+        run: npm install --no-package-lock --ignore-scripts
       - name: Install Chromium for browser automation
         run: npx playwright install --with-deps chromium
       - name: Start static frontend
@@ -34,6 +34,9 @@ jobs:
           exit 1
       - name: Screenshot and responsive overflow audit
         run: node tests/visual-audit.mjs
+      - name: Accessibility inspection · WCAG A/AA
+        continue-on-error: true
+        run: node tests/accessibility-audit.mjs
       - name: Upload screenshot / QA evidence
         if: always()
         uses: actions/upload-artifact@v4
