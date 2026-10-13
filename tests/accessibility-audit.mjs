@@ -42,6 +42,15 @@ for(const inspected of summary.pages)for(const v of inspected.violations||[]){
  grouped.set(v.id,prev);
 }
 console.log("Axe actionable rules:",JSON.stringify([...grouped.values()].sort((a,b)=>b.pages-a.pages).slice(0,15)));
+const failingNodes=new Map();
+for(const page of summary.pages)for(const violation of page.violations||[]){
+ for(const selector of violation.selectors||[]){
+  const key=Array.isArray(selector)?selector.join(" > "):String(selector);
+  failingNodes.set(key,(failingNodes.get(key)||0)+1);
+ }
+}
+console.log("Axe common failing selectors:",JSON.stringify([...failingNodes].sort((a,b)=>b[1]-a[1]).slice(0,75)));
+
 console.log("Axe audit:",summary.pages.length,"cases,",summary.seriousOrCritical,"serious/critical and",summary.moderateOrMinor,"other violations.");
 const inspectionFailures=summary.pages.filter(p=>p.failed);
 const causes=[...new Set(inspectionFailures.map(p=>p.failed))];
