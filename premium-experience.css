@@ -393,3 +393,35 @@ tr:hover td{background:#fbfdfb}
 .p-shortcut-grid{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.p-fleet-card,.p-button,.p-segment button{transition:none}.p-fleet-card:hover,.p-button:hover{transform:none}}
+
+
+/* Premium booking configurator */
+.p-booking-step-labels{display:flex;justify-content:space-between;gap:5px;margin:0 0 12px;flex-wrap:wrap}
+.p-booking-step-labels span{color:#a5b4a9;font-size:10px;font-weight:800;letter-spacing:.025em}
+.p-booking-step-labels .active{color:#257757}
+.p-booking-preview{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:11px;padding:13px;background:#edf5ec;border:1px solid #d8e8d7;border-radius:13px;margin-bottom:15px;min-width:0}
+.p-booking-preview-image{height:64px;border-radius:10px;background:linear-gradient(125deg,#b1d2c1,#e4f2e5);display:grid;place-items:center;overflow:hidden}
+.p-booking-preview-image svg{width:115%;height:auto}
+.p-booking-preview-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.p-booking-preview-copy .p-overline{font-size:9px}
+.p-booking-preview-copy strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#254b37}
+.p-booking-preview-copy>span:last-child{font-size:10px;color:#849b87}
+.p-booking-preview-price{text-align:right;white-space:nowrap}
+.p-booking-preview-price strong{font-size:13px;color:#2b6549}
+.p-booking-preview-price small{display:block;font-size:9px;color:#789981}
+.p-car-chooser{margin:15px 0 19px}
+.p-car-chooser-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;gap:8px}
+.p-car-chooser-title small{font-size:10px;color:#9cad9f}
+.p-car-chooser-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.p-car-choice{display:flex;flex-direction:column;align-items:start;text-align:left;border:1px solid #e0e8dc;background:#fbfdf9;border-radius:12px;padding:11px;min-width:0;transition:border-color .18s,background .18s}
+.p-car-choice:hover{background:#f1f7ed;border-color:#93c1a5}
+.p-car-choice.selected{border-color:#35876a;background:#e9f5e9;box-shadow:inset 0 0 0 1px #3f9073}
+.p-car-choice>span{height:69px;width:100%;display:grid;place-items:center;background:linear-gradient(130deg,#edf4eb,#dbece0);border-radius:8px;overflow:hidden}
+.p-car-choice svg{width:100%;height:auto}
+.p-car-choice strong{font-size:11px;color:#315443;margin:8px 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.p-car-choice small{font-size:10px;color:#719783}
+.drawer .steps{margin:0 0 19px;gap:5px}
+.drawer .step{height:4px;background:#e2ebdd}
+.drawer .step.active{background:#318b6a}
+.drawer .drawer-footer{background:#f8fbf7}
+@media(max-width:480px){.p-booking-preview{grid-template-columns:75px 1fr}.p-booking-preview-price{grid-column:2;text-align:left}.p-car-chooser-grid{grid-template-columns:1fr 1fr;gap:6px}.p-car-choice{padding:8px}.p-car-choice>span{height:55px}.p-booking-step-labels span{font-size:9px}}
