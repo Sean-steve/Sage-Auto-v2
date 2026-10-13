@@ -99,6 +99,97 @@ if(page==="Service updates")return normal(c,"Service & readiness","Maintenance e
 c.db.works.filter(function(w){return owned.some(function(v){return v.id===w.vehicle})}).length?relatedTable(c,c.db.works.filter(function(w){return owned.some(function(v){return v.id===w.vehicle})}),["Vehicle","Service","Status","Provider"],function(w){return row([h(c,veh(c,w.vehicle)?.name),h(c,w.task),pill(c,w.status),h(c,w.supplier)])}):empty(c,"No new service updates","Your vehicles have no recorded maintenance jobs in this demonstration.")),"My vehicles","page:My vehicles");
 if(page==="Profile")return normal(c,"Owner profile","Your approved relationship with the operating company.",section("Account details","Read-only sample identity",'<div class="pad-22">'+data(c,"Owner",owner?.name)+data(c,"Phone",owner?.phone)+data(c,"Email",owner?.email)+data(c,"Agreement",owner?.agreement)+'</div>')+notice(c,"Only permitted data","Production owner access will be secured by vehicle-owner associations, tenant boundaries and explicit permissions."),"Agreements","page:Agreements");
 return fallback(c,"owner")}
+
+/* DRIVER: professional mobile-friendly work queue; operator remains handover authority. */
+function driver(c){var p=c.state.page,jobs=c.db.driverJobs.filter(function(x){return x.driver===c.db.driverProfile.name}),today=jobs.filter(function(x){return x.status!=="Completed"});
+var listing=section("Assigned journeys","Pickup, route and next instructions",relatedTable(c,jobs,["Assignment","Customer / vehicle","Pickup","Progress","Action"],function(j){var b=c.db.bookings.find(function(x){return x.id===j.booking});return row(['<strong>'+h(c,j.id)+'</strong>',h(c,b?.customer||"Customer")+"<div class='row-secondary'>"+h(c,veh(c,b?.vehicle)?.name||"Vehicle")+"</div>",h(c,j.start)+"<div class='row-secondary'>"+h(c,j.pickup)+"</div>",pill(c,j.status),mini(c,"Review","driver-job",j.id)])}));
+if(p==="Overview")return normal(c,"Your next assignment starts here","Get pickup details, know what to do, and keep your operator updated.",
+counts(c,[["Assigned trips",today.length,"Open work items","calendar"],["On duty",c.db.driverProfile.onDuty?"Yes":"No","Your example availability","clock"],["Completed jobs",jobs.filter(function(j){return j.status==="Completed"}).length,"Trip history","car"],["Demo status",c.db.driverProfile.verified,"No real credential checks","shield"]])+
+review(c,"Be prepared before every pickup","Confirm vehicle, location, contact instructions and the company handover process before a trip.")+
+listing,"Open assignments","page:Assignments");
+if(p==="Assignments"||p==="Trip details")return normal(c,p,"All trips and status updates in one organized queue.",listing+
+notice(c,"Assignment updates are not vehicle transfers","Accepting a driver's task does not confirm customer identity, sign contracts or change the rental's possession state."),"Update availability","page:Availability");
+if(p==="Vehicle handover")return normal(c,"Pickup & handover","Checklist responsibilities and the correct escalation path.",
+displayStates(c,[["Receive assignment","See assigned car, pickup and operator instructions."],["Check vehicle condition","Record fuel, photos and existing issues."],["Confirm operator release","Company controls verified handover and rental state."],["Report completion","Provide status and raise any discrepancy."]])+
+section("Pickup queue","Driver cannot override company checks",relatedTable(c,jobs.filter(function(j){return j.status!=="Completed"}),["Assignment","Pickup","Status","Action"],function(j){return row([h(c,j.id),h(c,j.pickup),pill(c,j.status),mini(c,"Open checklist","driver-job",j.id)])})),"See assignments","page:Assignments");
+if(p==="Availability")return normal(c,"Driver availability","Make your working availability visible to dispatch.",
+section("Duty status","A mock toggle to demonstrate driver scheduling",'<div class="pad-22">'+data(c,"Currently on duty",c.db.driverProfile.onDuty?"Available for assignments":"Off duty")+action(c,c.db.driverProfile.onDuty?"Go off duty":"Go on duty","duty",null,"primary")+'</div>')+
+notice(c,"Dispatch rules","Production dispatch needs validated working hours, licence eligibility, conflicts, rest periods and service-area boundaries."),"Assignments","page:Assignments");
+if(p==="Documents")return normal(c,"Driver documents","Licence verification, assignments and necessary operator records.",
+section("Driver verification","Demo only",'<div class="pad-22">'+data(c,"Driver",c.db.driverProfile.name)+data(c,"Verification",c.db.driverProfile.verified)+data(c,"Assigned jobs",String(jobs.length))+'</div>')+
+notice(c,"Verification cannot be self-approved","Driver licence, insurance coverage and legal eligibility must be assessed by authorized operator staff."),"My trips","page:Assignments");
+if(p==="Earnings")return normal(c,"Earnings & allowances","Driver compensation is separate from rental revenue.",
+section("Job-based compensation","No payroll or driver payout integration",relatedTable(c,jobs,["Trip","Date","Job","Allowance","Payment"],function(j){return row([h(c,j.id),h(c,j.start),h(c,j.pickup)+" → "+h(c,j.dropoff),money(c,j.allowance||0),pill(c,(j.allowance||0)?"Estimated":"Not configured")])}))+
+notice(c,"No wage inference","A completed rental does not imply a driver was paid; payroll and allowances require separate agreements."),"Assignments","page:Assignments");
+if(p==="Messages")return normal(c,"Dispatch messages","Keep an accountable channel for vehicle and trip updates.",communications(c,"driver")+
+'<div class="quick-actions">'+action(c,"Send dispatch update","message",null,"primary")+'</div>',"Message dispatcher","message");
+return fallback(c,"driver")}
+/* CORPORATE: employee requests first; approval isn't a rental booking. */
+function corporate(c){var p=c.state.page,travel=c.db.travel,waiting=travel.filter(function(x){return x.status==="Awaiting approval"}),approved=travel.filter(function(x){return x.status==="Approved"});
+var requests=section("Business travel requests","Employee, dates, approval and operator follow-through",
+relatedTable(c,travel,["Request","Employee","Purpose","Date","Estimate","State","Action"],function(t){return row([h(c,t.id),h(c,t.employee),h(c,t.trip),h(c,t.start),money(c,t.cost),pill(c,t.status),t.status==="Awaiting approval"?mini(c,"Review","travel",t.id):mini(c,"Details","travel",t.id)])}));
+if(p==="Overview")return normal(c,"Business mobility, made simple","Control team requests, approvals, reservations and consolidated billing.",
+counts(c,[["Pending approvals",waiting.length,"Need your decision","alert"],["Approved travel",approved.length,"Awaiting operator fulfilment","calendar"],["Linked employees",c.db.corporatePeople.length,"Mock business directory","users"],["Approved estimates",money(c,approved.reduce(function(a,b){return a+b.cost},0)),"Not an invoice","wallet"]])+
+'<div class="grid two-columns">'+requests+section("Your travel policy","Approval happens before operator booking",displayStates(c,[["Employee request","Choose destination, category and date."],["Company approval","Manager approves internal travel spend."],["Operator reservation","Actual fleet confirmation and contract follow."],["Company reporting","Invoices and travel history become visible."]]))+'</div>',"New request","travel-new");
+if(p==="Travel requests"||p==="Approvals")return normal(c,p==="Approvals"?"Travel approvals":"Employee travel requests",
+"Requests need clear authority before they reach the operator.",
+requests+notice(c,"Important separation","Corporate approval does not guarantee the car, price or reservation. A demo lead is sent to the operator pipeline only after approval."),p==="Approvals"?"New request":"Create travel request","travel-new");
+if(p==="Reservations")return normal(c,"Corporate reservations","Track approved requests and their actual operator fulfilment state.",
+section("Approved corporate requests","Approval does not mean an issued vehicle contract",relatedTable(c,approved,["Employee","Request","Category","Date","Operator status"],function(t){return row([h(c,t.employee),h(c,t.id),h(c,t.category),h(c,t.start),pill(c,"Awaiting reservation")])}))+
+notice(c,"Operator handoff","When we marry the backend, confirmed fleet allocations and invoices will link to the original company approval request."),"New travel request","travel-new");
+if(p==="Employees")return normal(c,"Employees & travellers","Staff accounts, departments and travel permissions.",
+section("Corporate traveller directory","Sample employee records",relatedTable(c,c.db.corporatePeople,["Employee","Department","Account","Action"],function(x){return row([h(c,x.name),h(c,x.department),pill(c,x.status),mini(c,"View","corporate-person",x.id)])}))+
+'<div class="quick-actions">'+action(c,"Add employee","employee-new",null,"primary")+'</div>',"Add employee","employee-new");
+if(p==="Invoices")return normal(c,"Corporate invoices","Separate expected rental spend from actual financial documents.",
+section("Expense overview","Approved travel estimates — not invoices",relatedTable(c,approved,["Request","Purpose","Estimated amount","Invoice status"],function(t){return row([h(c,t.id),h(c,t.trip),money(c,t.cost),pill(c,"Not issued")])}))+
+notice(c,"No fabricated invoices","Invoices must be generated from the operator's actual finance system after correct booking and tax validation."),"Travel reports","page:Reports");
+if(p==="Reports")return normal(c,"Corporate travel insights","Department and request status reporting based on mock records.",
+counts(c,[["Total requests",travel.length,"Sample entries","calendar"],["Pending",waiting.length,"Needs approval","clock"],["Approved",approved.length,"Awaiting operator","shield"],["Estimated total",money(c,travel.reduce(function(s,t){return s+t.cost},0)),"Not actual spend","wallet"]])+
+section("Travel categories","Requests grouped by requested vehicle",'<div class="quick-actions">'+["SUV","Sedan","Van"].map(function(cat){return '<span class="pill">'+cat+' · '+travel.filter(function(t){return t.category===cat}).length+'</span>'}).join("")+'</div>'),"Travel requests","page:Travel requests");
+if(p==="Account settings")return normal(c,"Corporate account","Business account roles, travel policy and billing contacts.",
+section("Example account","A single corporate account workspace",'<div class="pad-22">'+data(c,"Company","Acacia Holdings Ltd (demo)")+data(c,"Approvals",String(waiting.length)+" outstanding")+data(c,"Policy","Approval required")+data(c,"Billing","Operator invoice after fulfilment")+'</div>')+
+notice(c,"Authorization","Approvers must have real corporate permissions. No user can grant their own production booking approval by changing a browser value."),"Approvals","page:Approvals");
+return fallback(c,"corporate")}
+/* AGENTS: referral belongs to agent; operator lead remains independent. */
+function agent(c){var p=c.state.page,ref=c.db.referrals,outstanding=ref.filter(function(r){return r.status!=="Paid"}),commission=ref.reduce(function(a,r){return a+Number(r.commission||0)},0);
+var reg=section("Referral register","Operator attribution, next status and example commission",relatedTable(c,ref,["Referral","Client","Request","Operator","State","Commission","Action"],function(x){return row([h(c,x.id),h(c,x.customer),h(c,x.request),h(c,x.operator),pill(c,x.status),money(c,x.commission),mini(c,"Review","referral",x.id)])}));
+if(p==="Overview")return normal(c,"Your business, connected","Manage agent-generated demand and commission without losing attribution.",
+counts(c,[["Client referrals",ref.length,"Sample agent opportunities","users"],["Confirmed leads",ref.filter(function(x){return x.status==="Confirmed"}).length,"Needs operator settlement","shield"],["Example commission",money(c,commission),"Not earned cash","wallet"],["Partner operators",1,"Illustrative operator network","briefcase"]])+
+reg,"Create a referral","referral-new");
+if(p==="New referral")return normal(c,"Create referral","Submit an enquiry to the operator, without inventing a confirmed booking.",
+review(c,"Capture what matters","Customer, service request, operator and source attribution stay linked.")+
+section("Referral action","A new lead will appear on the company Leads & enquiries screen.",'<div class="pad-22">'+action(c,"Start referral","referral-new",null,"primary")+'</div>'),"Start referral","referral-new");
+if(p==="Leads"||p==="Reservations")return normal(c,p,"Track linked referrals from enquiry to operator confirmation.",
+reg+notice(c,"Lead ≠ booking","An agent referral remains an enquiry until the operator verifies vehicle availability, price, customer and payment."),"New referral","referral-new");
+if(p==="Commissions"||p==="Payouts")return normal(c,p,"See expected compensation and payout requirements.",
+counts(c,[["Referral value",money(c,commission),"Illustrative agreed commission","wallet"],["Confirmed referrals",ref.filter(function(x){return x.status==="Confirmed"}).length,"Not automatically payable","shield"],["Outstanding entries",outstanding.length,"No money was sent","clock"],["Payment provider","Disconnected","No real payout rail","alert"]])+
+reg+notice(c,"Attribution is not settlement","Real agent payout requires contract entitlement, completed eligible rentals, accounting and authorized disbursement."),"Referrals","page:Leads");
+if(p==="Partners")return normal(c,"Partner operators","Rental operators that accept agent-sourced enquiries.",
+section("Connected demo company","No production partner onboarding performed",'<div class="pad-22">'+data(c,"Operator","Nairobi Drive")+data(c,"Region","Nairobi, Kenya")+data(c,"Agent access","Illustrative only")+action(c,"Submit referral","referral-new",null,"primary")+'</div>'),"New referral","referral-new");
+if(p==="Profile")return normal(c,"Agent profile","Identity, channel, commercial agreement and commission terms.",
+section("Agency account","Sample partner profile",'<div class="pad-22">'+data(c,"Agency","Peak Travel Partners (demo)")+data(c,"Primary market","Kenya")+data(c,"Commission","Per approved referral agreement")+data(c,"Verification","No live KYC connected")+'</div>')+
+notice(c,"Privacy","Agent users will only see their own leads, attribution and commissions once server-side access policies are implemented."),"Referrals","page:Leads");
+return fallback(c,"agent")}
+/* SERVICE: workshop progress is not the operator's maintenance approval. */
+function partner(c){var p=c.state.page,work=c.db.works.filter(function(w){return w.supplier==="City Auto Care"}),updates=c.db.serviceUpdates,open=work.filter(function(w){return w.status!=="Completed"});
+var jobs=section("Service jobs","Track acceptance, evidence and operator close-out",relatedTable(c,work,["Work order","Vehicle","Requested work","Due","Operator state","Partner action"],function(w){var up=updates.find(function(x){return x.work===w.id});return row([h(c,w.id),h(c,veh(c,w.vehicle)?.name),h(c,w.task),h(c,w.due),pill(c,w.status),mini(c,up?.stage||"Open","service-job",w.id)])}));
+if(p==="Overview")return normal(c,"Today's service desk","Your assigned jobs, due dates and evidence in one view.",
+counts(c,[["Jobs assigned",work.length,"From demo operators","wrench"],["Open work orders",open.length,"Need progress updates","clock"],["Awaiting evidence",work.filter(function(w){return !(updates.find(function(u){return u.work===w.id})?.evidence||[]).length}).length,"Attach service proof","file"],["Estimated work value",money(c,work.reduce(function(a,b){return a+Number(b.cost||0)},0)),"Not a paid invoice","wallet"]])+
+jobs,"View jobs","page:Assigned jobs");
+if(p==="Assigned jobs"||p==="Work orders")return normal(c,p,"Only jobs assigned to this example workshop are visible.",
+jobs+notice(c,"Ownership of approval","The workshop may submit an update or evidence; only the rental operator should accept the repairs and restore full rental readiness."),"Upload evidence","page:Job evidence");
+if(p==="Inspections")return normal(c,"Service inspections","Attach service condition evidence without altering a rental inspection.",
+section("Assigned vehicle reviews","Open the related service job",relatedTable(c,work,["Vehicle","Work order","Description","Action"],function(w){return row([h(c,veh(c,w.vehicle)?.name),h(c,w.id),h(c,w.task),mini(c,"Record evidence","service-job",w.id)])})),"Work orders","page:Work orders");
+if(p==="Job evidence")return normal(c,"Job evidence","Record findings, reference filenames and follow-up.",
+section("Evidence attached to work orders","Metadata only; no file bytes saved",relatedTable(c,work,["Work","Service progress","Evidence references","Action"],function(w){var up=updates.find(function(x){return x.work===w.id});return row([h(c,w.id),pill(c,up?.stage||"Assigned"),String(up?.evidence?.length||0),mini(c,"Update job","service-job",w.id)])}))+
+notice(c,"Media security","Production requires safe document uploads, signed storage URLs, file scanning, tenant restrictions and audit logs."),"Assigned jobs","page:Assigned jobs");
+if(p==="Invoices")return normal(c,"Service invoices","Review estimated work and submit supporting charges to the operator.",
+section("Work order estimates","Not approved invoices or cash received",relatedTable(c,work,["Work","Description","Estimate","State"],function(w){return row([h(c,w.id),h(c,w.task),money(c,w.cost),pill(c,w.status)])}))+
+notice(c,"Invoice approval","The operator owns expense approval and invoice reconciliation. This prototype cannot pay a supplier."),"View work orders","page:Work orders");
+if(p==="Messages")return normal(c,"Operator communication","Ask questions and document job status.",communications(c,"service")+
+'<div class="quick-actions">'+action(c,"Send service update","message",null,"primary")+'</div>',"Send message","message");
+return fallback(c,"service")}
 /* __CONTINUE__ */
+
 
 })();
