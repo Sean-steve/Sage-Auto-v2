@@ -184,3 +184,39 @@ body.ops-active .op-workspace :where(.op-eyebrow,.op-toolbar){font-variant-numer
  .sx2-journey-controls .sx2-source{width:100%;margin-right:0}
  .sx2-helper-actions .sx2-action{flex:1 1 170px}
 }
+
+/* Cross-product WCAG 2.1 AA text contrast improvements.
+   Neutral labels on porcelain/white must remain at least 4.5:1.
+   Context-specific dark headers retain bright lettering. */
+body.sage-studio:not([data-studio-theme="night"]) .main .eyebrow,
+body.sage-studio:not([data-studio-theme="night"]) .main .section-lead .eyebrow{
+ color:#5546a2;
+}
+body.sage-studio .main .section-lead p,
+body.sage-studio .main .surface-card > span:not(.surface-icon),
+body.sage-studio .main .breadcrumbs,
+body.sage-studio .main .breadcrumbs > span,
+body.sage-studio .main .subtle{
+ color:#535c6f;
+}
+body.sage-studio:not([data-studio-theme="night"]) .topbar .breadcrumbs{
+ color:#535c6f;
+}
+body.sage-studio .public-shell .section-lead p{
+ color:#556174;
+}
+body.sage-studio .main .surface-card footer{
+ color:#20664f;
+}
+body.sage-studio .main .muted{color:#596477}
+body.sage-studio .main .topbar .breadcrumbs b{color:#2c3548}
+/* Keep stepper visible, scrollable, and reachable with Tab on touch devices. */
+.d2-stepper[tabindex="0"]{
+ overscroll-behavior-x:contain;
+ scrollbar-width:thin;
+ scroll-padding-inline:14px;
+}
+.d2-stepper[tabindex="0"]:focus-visible{
+ outline:3px solid #655adb;
+ outline-offset:3px;
+}
