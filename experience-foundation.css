@@ -397,3 +397,29 @@ body.sage-studio .main .op-board-header p,
 body.sage-studio .main .op-filter-tabs .op-filter{
  color:#475368;
 }
+
+/* Final Axe route-level contrast remedies: fixed text against original fill. */
+body.sage-studio .main .op-board-cols > span{
+  color:#344259!important;
+  opacity:1!important;
+}
+body.sage-studio .main .op-state-warn{
+  color:#783806!important;
+  background:#fff0e4;
+}
+body.sage-studio .main .op-state-live{
+  color:#145b36!important;
+  background:#e1f3e6;
+}
+body.sage-studio .main .op-state-done{
+  color:#364b58!important;
+  background:#e9eff2;
+}
+/* The current/done step icons are dark green chips, unlike the rest of the
+   stepper; keep white text against a sufficiently dark green fill. */
+body.sage-studio .public-shell .d2-step.current > span,
+body.sage-studio .public-shell .d2-step.done > span{
+  background:#14685b!important;
+  color:#ffffff!important;
+  opacity:1!important;
+}
