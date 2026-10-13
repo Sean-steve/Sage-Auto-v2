@@ -23,6 +23,7 @@ jobs:
           node --check external-portals.js
           node --check gap-closure.js
           node --check premium-experience.js
+          node --check reference-experience.js
       - name: Run interactive mock workflow smoke tests
         run: |
           node tests/smoke.test.js
@@ -32,6 +33,7 @@ jobs:
           node tests/p3d-quality.test.js
           node tests/p3d2-gap-closure.test.js
           node tests/p3e-experience.test.js
+          node tests/reference-experience.test.js
       - name: Verify frontend assets exist
         run: |
           test -s index.html
@@ -45,6 +47,8 @@ jobs:
           test -s gap-closure.css
           test -s premium-experience.js
           test -s premium-experience.css
+          test -s reference-experience.js
+          test -s reference-experience.css
           grep -q 'app.js' index.html
           grep -q 'styles.css' index.html
   deploy:
@@ -58,7 +62,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp index.html app.js styles.css company-detail.js company-detail.css external-portals.js external-portals.css gap-closure.js gap-closure.css premium-experience.js premium-experience.css _site/
+          cp index.html app.js styles.css company-detail.js company-detail.css external-portals.js external-portals.css gap-closure.js gap-closure.css reference-experience.js reference-experience.css premium-experience.js premium-experience.css _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
