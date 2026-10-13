@@ -270,3 +270,28 @@ body.sage-studio .public-shell .d2-step.current > span{
 body.sage-studio .main :where(.stat-label,.stat-bottom){
   color:#505b6e;
 }
+
+/* CH-020: fix Axe-flagged legacy text contrast across rentals and portal views.
+   Applied only to text/labels, not charts or meaningful state color fills. */
+body.sage-studio .main :where(.shortcut kbd,.rj-existing-hint,
+ .op-payments > small,.op-handover > small,.op-incidents > small,
+ .op-requests > small,.op-ready > small,.task-details > small,
+ .card-header p,.section-block .card-header p,.op-workspace em){
+ color:#465166;
+}
+body.sage-studio .main :where(.table-wrap th,.sx2-table th,.rj-workspace th){
+ color:#465166;
+}
+body.sage-studio .main :where(.vehicle-meta,.vehicle-card .vehicle-meta,
+ .price small,.muted,.subtle){color:#4c5669}
+body.sage-studio .main .sx-role-small{color:#303447;opacity:1}
+body.sage-studio .main .sx-role-footer > span{color:#303447;opacity:1}
+body.sage-studio .main :where(.sx-role-left > p,.sx-role-footer p){color:#485367}
+body.sage-studio .public-shell :where(.d2-step,.d2-step > b,.d2-step > span){
+ color:#465166;
+}
+body.sage-studio .public-shell .d2-step.current :where(span,b){
+ color:#30284d;
+}
+body.sage-studio .main :where(.rj-status,.rj-existing-hint,.rj-detail span){font-weight:700}
+body.sage-studio .main :where(.op-toolbar small,.sx2-source){opacity:1}
