@@ -11,8 +11,8 @@ const surfaces = [
  ["agent","Overview"],["service","Overview"],["marketplace","Discover"]
 ];
 const gaps = {
- company:["Booking changes","Dispatch & assignments","Availability policy","Offers & promotions","Refund approvals","Invoice detail","Company launch checklist"],
- platform:["Tenant provisioning","Entitlement review","Integration health","Jobs & events","Platform incidents","Platform roles","Support access","Compliance policies","Platform notifications"],
+ company:["Booking changes","Dispatch & assignments","Availability policy","Offers & promotions","Refund approvals","Invoice detail","Company launch checklist","Subscription status"],
+ platform:["Tenant provisioning","Entitlement review","Subscription recovery","Integration health","Jobs & events","Platform incidents","Platform roles","Support access","Compliance policies","Platform notifications"],
  marketing:["Tour & setup","Verify email","Business setup","Choose plan","First-run setup","Sign in & recovery"],
  branded:["Checkout & review"]
 };
