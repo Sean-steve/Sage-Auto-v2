@@ -163,6 +163,7 @@ if(p==="First-run setup"){body=stepper(c,5,names)+section("Your first launch che
 '<div class="quick-actions">'+btn(c,"Open company setup workspace","company:Company launch checklist",null,"primary")+'</div>'+info(c,"No tenant was provisioned","This page is a visual first-run journey. Only the backend can create a company securely.")}
 if(p==="Sign in & recovery"){body=section("Access your Sage Auto workspace","Design for sign-in and account recovery; no real login",'<div class="pad-22"><div class="form-grid">'+formField(c,"Work email","email","email",u.email,true)+formField(c,"Password","password","password","",true)+'</div><div class="quick-actions">'+btn(c,"Preview sign-in","auth-preview",null,"primary")+btn(c,"Preview recovery","auth-recovery")+'</div></div>')+
 info(c,"Authentication does not exist in this prototype","Never enter real passwords, API keys, or personal account credentials here.")}
+if(window.SageOnboardingContinuity)body=window.SageOnboardingContinuity.decorate(c,p,body);
 return publicBase(c,p,p==="Sign in & recovery"?"Account access and recovery states":"Step "+step+" of 5 · Guided SaaS onboarding",body)}
 function checkout(c){var x=c.db.checkout,v=vehicle(c,x.vehicle)||c.db.vehicles[0],total=quote(c,v.id,x.days);var content=stepper(c,x.step,["Vehicle","Details","Review","Request"]),box='';
 if(x.step===1)box=section("Select dates and a vehicle","Pricing and eligibility are examples only",'<div class="pad-22"><div class="form-grid">'+select(c,"Vehicle","vehicle",c.db.vehicles.filter(z=>z.status==="Available"&&z.compliant).map(z=>[z.id,z.name+" · "+money(c,z.rate)+"/day"]),x.vehicle)+
@@ -217,7 +218,7 @@ return '<div class="modal-backdrop" data-action="close-outside"><section class="
 /* Action engine: records only preview intentions; no real transaction/authorization */
 function val(name){var root=document.getElementById("d2-form")||document,el=root.querySelector&&root.querySelector('[name="'+name+'"]');return el?String(el.value||"").trim():""}
 function positive(v){return Number.isFinite(Number(v))&&Number(v)>0}
-function act(action,node,c){if(!action.startsWith("p3d2:"))return false;seed(c.db);var cmd=action.slice(5),id=node.getAttribute("data-id")||"",db=c.db,side=c.state.portal,p=cmd.split(":"),type=p[0],rest=p.slice(1).join(":"),x,b;
+function act(action,node,c){if(!action.startsWith("p3d2:"))return false;seed(c.db);if(window.SageOnboardingContinuity&&window.SageOnboardingContinuity.action(action,node,c))return true;var cmd=action.slice(5),id=node.getAttribute("data-id")||"",db=c.db,side=c.state.portal,p=cmd.split(":"),type=p[0],rest=p.slice(1).join(":"),x,b;
 if(type==="open"){c.state.modal="p3d2:"+rest+":"+(id||"");c.render();return true}
 if(type==="close"){c.state.modal=null;c.render();return true}
 if(type==="page"){c.navigate(side,rest);return true}
