@@ -17,18 +17,18 @@
 | Sage Auto public marketing | Home, Why Sage Auto, Features, Pricing, Get started; subscription concept and onboarding enquiry |
 | Company-branded rental storefront | Explore vehicles, Find my booking, Our services, Contact us; sample car discovery, save vehicle, submit operator enquiry, renter navigation |
 | Future Sage Auto Marketplace | Discover, Browse cars, Saved vehicles, Trips, Help; differentiated future-concept discovery and enquiry |
-| Company operations | Previously delivered P3-B detailed company workspace remains active; shared demo leads, booking records, vehicles, maintenance and owner statements interoperate with P3-C |
+| Company operations | P3-B workspace remains active, plus **Customer requests** and **Partner updates** inboxes for renter extension and workshop-service handoffs |
 
-**Routing:** 70 external-role and public-route combinations tested. Pages may contain multiple UI states and drawers. This is not a statement that every architecture-design screen is finished or production-capable.
+**Routing:** 70 external-role and public-route combinations tested, plus 2 newly connected company inbox pages. Pages may contain multiple UI states and drawers. This is not a statement that every architecture-design screen is finished or production-capable.
 
 ## Cross-portal experience contracts
 
-1. **Renter ⇄ operator bookings:** renter only sees sample bookings for the example profile (Amina Wanjiku); extension requests are stored as *Pending review*, with no automatic alteration of rental duration.
+1. **Renter ⇄ operator bookings:** renter only sees sample bookings for the example profile (Amina Wanjiku); extension requests appear in the operator **Customer requests** inbox. The company can approve *in principle* or decline, but neither action silently alters dates, charges or possession.
 2. **Owner ⇄ operator fleet/finance:** owner sees only the vehicle under the sample owner agreement (Mary Wambui / Toyota Prado TX) and matching booking/statement records. Other renters' personal names are deliberately not shown in owner activity.
 3. **Driver ⇄ operator trip workflow:** assignment status can progress *Assigned → Accepted → At pickup → Completed*. These updates do not alter rental contract, booking payment, vehicle possession or operator handover.
 4. **Corporate ⇄ operator lead pipeline:** staff travel request starts *Awaiting approval*. An authorized **demo** approval creates an operator lead, not an allocation, charge, invoice or booking.
 5. **Agent ⇄ operator pipeline:** new referral creates a company lead with attribution; illustrative commission is never treated as settled.
-6. **Service partner ⇄ operator maintenance:** partner can accept a work order and attach filename/URL metadata. This does **not** close the operator work order or restore a rental vehicle.
+6. **Service partner ⇄ operator maintenance:** partner can accept a work order and attach filename/URL metadata. These updates appear in the operator **Partner updates** inbox. Evidence acknowledgement does **not** close the operator work order or restore a rental vehicle.
 7. **SaaS platform ⇄ tenant accounts:** the platform admin can review and mark a tenant Active in mock state, with no actual tenant, website, payment or subscription provisioning.
 8. **Operator storefront ⇄ company lead pipeline:** public rental enquiries create leads, not confirmed reservations. Branded storefront reads example fleet states and brand name/headline from P3-B Website Studio.
 9. **Marketing ⇄ platform onboarding:** prospect sign-up produces an enquiry record rather than activating a plan.
@@ -54,7 +54,7 @@
 ## Quality gates
 
 - 70 external/public page routes rendered without runtime errors in a simulated DOM test.
-- Cross-portal tests assert: renter booking scope, owner vehicle scope, pending extension, driver dispatch independence, approved corporate lead, agent-attributed lead, partner evidence without work order closure, tenant approval mock-only, branded public enquiries, marketing signup not provisioning a tenant.
+- Cross-portal tests assert: renter booking scope, owner vehicle scope, pending extension and operator review, driver dispatch independence, approved corporate lead, agent-attributed lead, partner evidence without work order closure, tenant approval mock-only, branded public enquiries, marketing signup not provisioning a tenant.
 - GitHub Pages deployment workflow validates syntax and runs previous P3-A/P3-B tests plus P3-C tests.
 - Smoke tests use Node with no dependencies, but actual browser visual QA, keyboard/focus trapping, accessibility review, real mobile-device tests and multi-user permission tests **still need completion**.
 
