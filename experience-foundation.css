@@ -220,3 +220,53 @@ body.sage-studio .main .topbar .breadcrumbs b{color:#2c3548}
  outline:3px solid #655adb;
  outline-offset:3px;
 }
+
+/* WCAG follow-up from real Playwright/Axe selector distribution (32 views).
+   Preserve color semantics but give status text and labels readable luminance. */
+body.sage-studio :where(.main,.public-shell) .pill,
+body.sage-studio .main .top-controls .pill{
+  color:#454e66;background:#eef0f6;border-color:#d6dbe7;
+}
+body.sage-studio :where(.main,.public-shell) .pill.success,
+body.sage-studio .main .top-controls .pill.success{color:#16573b;background:#e4f3e9;border-color:#c1dbc9}
+body.sage-studio :where(.main,.public-shell) .pill.warn{color:#794609;background:#fff1d8;border-color:#ecd4a2}
+body.sage-studio :where(.main,.public-shell) .pill.error{color:#892d3c;background:#fce9eb;border-color:#efc5ca}
+body.sage-studio :where(.main,.public-shell) .pill.info{color:#294e8f;background:#e7efff;border-color:#cbd8f5}
+body.sage-studio .main :where(.shortcut kbd,.sx-location-note,.sx-location-note span,
+  .sx-overline,.stat-label,.stat-bottom,.op-toolbar small,
+  .op-header p,.op-header-controls label){
+  color:#4e596c;
+}
+body.sage-studio .main :where(.sx-context-link,button[data-action="studio:theme"]){
+  color:#494f66;
+}
+body.sage-studio .main .section-lead p,
+body.sage-studio .main .surface-card > span:not(.surface-icon),
+body.sage-studio .main .vehicle-meta{
+  color:#505b6d;
+}
+body.sage-studio .public-shell :where(.section-lead p,.surface-card > span:not(.surface-icon),.muted),
+body.sage-studio .main .p-surface :where(.muted,.subtle){
+  color:#505c71;
+}
+body.sage-studio .public-shell .eyebrow{
+  color:#5041a2;
+}
+body.sage-studio .main .eyebrow,
+body.sage-studio .main .page-heading .eyebrow{
+  color:#5041a2;
+}
+body.sage-studio .main .op-header p,
+body.sage-studio .main .op-header-controls label{
+  color:#4d586e;
+}
+body.sage-studio .main .rj-panel-head p,
+body.sage-studio .main .rj-empty{
+  color:#525c70;
+}
+body.sage-studio .public-shell .d2-step.current > span{
+  color:#30284d;
+}
+body.sage-studio .main :where(.stat-label,.stat-bottom){
+  color:#505b6e;
+}
