@@ -95,7 +95,7 @@ const p=s.indexOf('<section class="p-public-cover">');
 if(p>=0){let end=s.indexOf("</section>",p);if(end>=0)s=s.slice(0,p)+hero+s.slice(end+10)}
 else {let q=s.indexOf('<main id="main-content">');if(q>=0)s=s.slice(0,q+24)+hero+s.slice(q+24)}
 return s}
-function toolbar(c,s){if(["marketing","branded","marketplace"].includes(c.state.portal))return s;
+function toolbar(c,s){if(window.SageOpsV2&&c.state.portal==="company")return window.SageOpsV2.toolbar(c,s);if(["marketing","branded","marketplace"].includes(c.state.portal))return s;
  const isOperator=c.state.portal==="company",pinned=isOperator?state.favourites.slice(0,5):[];
  const pins=isOperator?'<div class="sx-pins" aria-label="Pinned modules">'+pinned.map(n=>act(c,esc(c,n),"studio:go:"+n,"sx-pin"+(c.state.page===n?" active":""))).join("")+'</div>':"";
  const isPinned=state.favourites.includes(c.state.page);
