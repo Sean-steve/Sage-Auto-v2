@@ -1,3 +1,5 @@
+> **Historical baseline:** This report captures the P3-D audit before gap closure. For the current screen status and visual QA requirements, see [P3-D.2 Report](PHASE3D2_GAP_CLOSURE_REPORT.md).
+
 # SAGE AUTO V2 · P3-D FINAL VISUAL FLOW RECONCILIATION & QUALITY AUDIT
 
 **Audit date:** 13 October 2026  
