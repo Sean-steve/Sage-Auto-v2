@@ -145,7 +145,7 @@ function decorateCompany(c,original){
   page==="Finance & payments"||page==="Invoice detail"||page==="Deposits & refunds"?financeContent(c):
   page==="Owner settlements"?payoutContent(c):"";
  return '<section class="rj-workspace" aria-label="Connected rental workbench" data-journey="'+esc(page)+'">'+
- journeyNav(c)+'<div class="rj-context">'+details+'</div><details class="rj-existing" open><summary><span>Complete existing '+esc(page)+' tools and records</span><span class="rj-existing-hint">All prior forms, actions, filters and history retained ↓</span></summary><div class="rj-existing-content">'+original+'</div></details></section>';
+ journeyNav(c)+'<div class="rj-context">'+details+'</div><details class="rj-existing" open><summary><span>Complete existing '+esc(page)+' tools and records</span><span class="rj-existing-hint">All prior forms, actions, filters and history retained ↓</span></summary><div class="rj-existing-content" tabindex="0" role="region" aria-label="Original operator forms and records; scroll horizontally to see all columns">'+original+'</div></details></section>';
 }
 function decorateExternal(c,html){
  if(!html||!["renter","owner"].includes(c.state.portal))return html;
@@ -178,7 +178,7 @@ function drawer(c){
  if(!c.state.modal||!c.state.modal.startsWith("journey:"))return null;
  const [kind,...parts]=c.state.modal.slice(8).split(":"),id=parts.join(":");
  const b=(c.db.bookings||[]).find(x=>x.id===id);
- if(kind==="slot"){
+ if(kind==="slot"||kind==="inspectSlot"){
   const v=cars(c).find(v=>v.id===id),start=core.dateOnly(UI.date),end=core.plus(start,Number(UI.days)||2);
   if(!v)return null;
   const check=core.availability(c.db,id,start,end),alt=core.alternatives(c.db,start,end,id);
