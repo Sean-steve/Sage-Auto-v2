@@ -348,3 +348,24 @@ body.sage-studio .d2-step.current > span,
 body.sage-studio .d2-step.done > span{
  color:#fff;background:#176b5c;
 }
+
+/* WCAG AA color-contrast triage / repeat scan. Shared low-contrast legacy hints. */
+body.sage-studio :where(.main,.public-shell) :where(kbd,.shortcut kbd,
+  .row-secondary,.notice p,.empty-state,.empty-state p,.vehicle-meta,
+  .card-header p,.section-lead p,.flow-step p,.op-board-header p){
+  color:#364558!important;opacity:1!important;
+}
+body.sage-studio :where(.main,.public-shell) :where(
+ .flow-number,.d2-step span,.d2-step b,.d2-step,
+ .op-filter,.op-filter:not(.active),.op-workspace small,
+ .op-board-header small,.rj-existing-hint,.field label,
+ .op-board-header > div > p){
+  color:#354358!important;opacity:1!important;
+}
+body.sage-studio .main :where(.sx-role-left > p,.sx-role-small,
+ .sx-role-footer > span,.sx-role-footer p){color:#303747!important;opacity:1!important}
+body.sage-studio .main :where(.op-metric em,.op-metric small,.op-toolbar em,
+ .stat-card em,.section-block em,.rj-workspace em){color:#39465a!important;opacity:1!important}
+body.sage-studio .main .rj-workspace :where(.rj-panel-head p,.rj-empty,.rj-existing-hint){
+ color:#354358!important;opacity:1!important
+}
