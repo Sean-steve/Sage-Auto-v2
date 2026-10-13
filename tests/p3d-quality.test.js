@@ -15,7 +15,7 @@ if(status!=="not_implemented")assert.ok(route.startsWith("#"),"screen has no pro
 counts[status]++;group[side]=(group[side]||0)+1;
 }
 assert.deepEqual(Object.values(group),[14,20,81,13,16,13,12,14,11,10,11]);
-assert.equal(counts.interactive_mock,112);assert.equal(counts.visual_or_partial,81);assert.equal(counts.not_implemented,22);
+assert.equal(counts.interactive_mock,113);assert.equal(counts.visual_or_partial,82);assert.equal(counts.not_implemented,20);
 const html=fs.readFileSync("index.html","utf8"),css=fs.readFileSync("styles.css","utf8");
 assert.ok(html.includes('class="skip-link"'),"skip link missing");
 assert.ok(css.includes(":focus-visible"),"keyboard focus styling missing");
