@@ -46,5 +46,8 @@ click("rx:finance:Deposits");has("Deposits register");has("Refund");
 click("rx:finance:Expenses");has("Expenses register");has("Toyota RAV4 service");
 click("rx:finance:Payments");has("Payments register");
 click("v2:open:payment");has("Record demo payment");click("close");
+route("Pricing");has("Rates that make sense.");has("rx-quote-lab");has("Illustrative rental subtotal");click("v2:open:rate",null,"V01");has("Update base daily rate");click("close");
+route("Returns & charges");has("Close the journey, not the books.");has("Awaiting vehicle return");click("v2:return",null,"SA-1042");has("Vehicle return");click("close");
+route("Owner settlements");has("Keep every owner in the picture.");has("rx-owner-queue");click("v2:payout-review",null,"PAY-081");has("Owner settlement detail");click("close");
 route("Fleet");has("p-gallery");route("Overview");has("p-command-hero");
 console.log("SaaS-reference UX PASS: calendar filters/day details, reservation stages and payment, condition hotspots/checklist, finance tabs, and premium core continuity.");
