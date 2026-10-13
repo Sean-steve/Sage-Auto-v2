@@ -64,7 +64,7 @@ function decorativeIntro(c,page){const config={"Bookings":["RESERVATION INTELLIG
 "Website studio":["DIGITAL SHOWROOM","Your brand. Your front door.","Give renters a coherent path from discovery to an enquiry.","globe","premium:route:Fleet","Explore fleet"]
 }[page];
 if(!config)return "";return '<div class="p-page-intro"><div><span class="p-overline">'+config[0]+'</span><h2>'+config[1]+'</h2><p>'+config[2]+'</p></div><span class="p-page-intro-icon">'+icon(c,config[3],32)+'</span></div>'}
-function company(c,html){if(window.SageReferenceV2){window.SageReferenceV2.connect(c);const experience=window.SageReferenceV2.renderCompany(c);if(experience!==null)return experience}if(c.state.page==="Overview"||c.state.page==="Today's operations")return companyDashboard(c);if(c.state.page==="Fleet")return carGallery(c);
+function company(c,html){if(window.SageStudioV2){window.SageStudioV2.connect(c);const bespoke=window.SageStudioV2.company(c);if(bespoke!==null)return bespoke;}if(window.SageReferenceV2){window.SageReferenceV2.connect(c);const experience=window.SageReferenceV2.renderCompany(c);if(experience!==null)return experience}if(c.state.page==="Overview"||c.state.page==="Today's operations")return companyDashboard(c);if(c.state.page==="Fleet")return carGallery(c);
 return '<div class="p-surface p-workflow">'+decorativeIntro(c,c.state.page)+html+'</div>'}
 const roles={
 platform:{eyebrow:"SAGE AUTO · NETWORK OPERATIONS",lead:"The platform behind",em:"every journey.",sub:"Keep operators moving, understand demand, and look after the whole network.",primary:["Manage companies","Companies"],secondary:["Approvals","Approvals"],icon:"layers",photo:"#223b42"},
@@ -74,7 +74,7 @@ driver:{eyebrow:"DRIVER WORKSPACE · READY TO GO",lead:"Every assignment.",em:"H
 corporate:{eyebrow:"BUSINESS MOBILITY",lead:"Travel together.",em:"Stay in control.",sub:"Requests, approvals and company travel under one roof.",primary:["Travel requests","Travel requests"],secondary:["Approvals","Approvals"],icon:"briefcase",photo:"#cfdbed"},
 agent:{eyebrow:"SALES PARTNER EXPERIENCE",lead:"Bring opportunities.",em:"Build momentum.",sub:"Referrals, bookings and commissions without losing the customer story.",primary:["New referral","New referral"],secondary:["Commissions","Commissions"],icon:"handshake",photo:"#cfdcca"},
 service:{eyebrow:"SERVICE PARTNER EXPERIENCE",lead:"Make great service",em:"visible.",sub:"Clear work orders, timely evidence, and reliable operator updates.",primary:["Assigned jobs","Assigned jobs"],secondary:["Job evidence","Job evidence"],icon:"wrench",photo:"#d8caba"}};
-function roleHero(c,base){const role=roles[c.state.portal];if(!role)return base;
+function roleHero(c,base){if(window.SageStudioV2){const bespoke=window.SageStudioV2.role(c,base);if(bespoke!==null)return bespoke;}const role=roles[c.state.portal];if(!role)return base;
 const db=c.db;let v=db.vehicles.find(x=>x.status==="Available")||db.vehicles[0];
 let custom="";
 if(c.state.portal==="renter"){const r=db.bookings.find(x=>x.customer===(db.renterProfile?.name||"Amina Wanjiku")&&x.status==="Active");if(r){const car=db.vehicles.find(x=>x.id===r.vehicle);custom='<div class="p-home-aux"><span class="p-overline">IN YOUR GARAGE</span><strong>'+esc(c,car?.name||"Your car")+'</strong><span>'+esc(c,r.id)+' · Rental active</span></div>'}}
