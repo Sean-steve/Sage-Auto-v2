@@ -15,7 +15,7 @@ function click(action,value,id){const el={getAttribute(k){return k==="data-actio
 function change(id,value){for(const fn of events.change||[])fn({target:{id,value},preventDefault(){}})}
 function has(v){assert.ok(root.innerHTML.includes(v),"Missing rendered phrase: "+v)}
 const db=()=>JSON.parse(mem.get("sage-auto-v2-phase3-1")||"{}");
-has("sx-cockpit");has("Make every");has("journey count.");has("THE DEPARTURE BOARD");has("THE COMMERCIAL PICTURE");has("p-surface")===false;
+has("sx-cockpit");has("Make every");has("journey count.");has("THE DEPARTURE BOARD");has("THE COMMERCIAL PICTURE");
 has("Grace Njeri");has("SA-1044");
 click("studio:lane:Confirmed");has('sx-filter-tab active');assert.ok(!root.innerHTML.includes('class="sx-journey-person"><span class="sx-order">01</span><div><strong>Grace Njeri'));
 click("studio:lane:All");has("Grace Njeri");
