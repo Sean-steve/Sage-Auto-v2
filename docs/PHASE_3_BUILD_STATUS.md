@@ -29,6 +29,10 @@ Phase 2 identified **11 experience surfaces, 215 proposed screen contracts, 22 m
 
 P3-B adds 24 dedicated company pages covering fleet registration and profiles; owners/agreements; customers and driver verification; 12-area inspections; maintenance; daily pricing; collision-aware availability holds; contracts and handover; returns and final charges; media and compliance attachment options; receipts, deposits, expenses, settlements; lead stages; business insights; branded website preview; branches, staff and permissions; subscription, integrations and audit. See `docs/PHASE_3B_COMPANY_OPERATIONS.md` for the implementation and exclusions.
 
+### P3-C external experiences
+
+The platform admin, renter, vehicle owner, driver, corporate customer, agent, service partner, public marketing, branded storefront and future marketplace now have dedicated, navigable prototype pages. **70 external/public routes** and **2 operator handoff inboxes** were exercised in simulated DOM testing. Cross-portal actions are defined: extensions → company Customer requests; agent/corporate/public enquiries → company Leads; workshop evidence → company Partner updates; owner/payout and renter/booking records remain linked to company mock state. See `docs/PHASE_3C_EXTERNAL_USER_EXPERIENCES.md`.
+
 ### Core interactions implemented
 
 1. Switch between all 11 experience surfaces using an experience preview switcher.
@@ -61,7 +65,7 @@ These are frontend simulations ONLY: they do not validate compliance, confirm re
 
 **P3-B · Company workflow detail:** Dedicated company interfaces and mock flows are implemented for the listed modules. Still missing deeper rental extensions, dedicated incident/dispute resolution, and real contract/document verification. Full production behavior is reserved for backend reconciliation.
 
-**P3-C · External role experiences:** Complete dedicated workflows and screens for renter, owner, driver, agent, corporate, partner, platform administration, marketing and branded rental website. Add role-specific edge cases.
+**P3-C · External role experiences:** Dedicated pages and principal cross-portal mock actions delivered for renter, owner, driver, agent, corporate, partner, platform admin, marketing, storefront and future marketplace. Production-grade exceptions, comprehensive visuals/accessibility QA, and full Phase 2 contract traceability remain P3-D.
 
 **P3-D · Coverage and accessibility:** Map all 215 Phase 2 screen contracts against implemented routes and scenarios, verify 22 end-to-end journeys and 21 negative paths, perform mobile and keyboard testing, produce screenshots and a product review pack.
 
