@@ -26,6 +26,10 @@ jobs:
           node --check reference-experience.js
           node --check motion-studio.js
           node --check ops-hardening.js
+          node --check rental-core.js
+          node --check rental-journey.js
+          node --check onboarding-continuity.js
+          node --check experience-foundation.js
       - name: Run interactive mock workflow smoke tests
         run: |
           node tests/smoke.test.js
@@ -38,6 +42,10 @@ jobs:
           node tests/reference-experience.test.js
           node tests/motion-studio.test.js
           node tests/p3f-operations.test.js
+          node tests/rental-core.test.js
+          node tests/rental-journey.test.js
+          node tests/audit-onboarding.test.js
+          node tests/audit-wave1.test.js
       - name: Verify frontend assets exist
         run: |
           test -s index.html
@@ -57,6 +65,12 @@ jobs:
           test -s motion-studio.css
           test -s ops-hardening.js
           test -s ops-hardening.css
+          test -s rental-core.js
+          test -s rental-journey.js
+          test -s rental-journey.css
+          test -s onboarding-continuity.js
+          test -s experience-foundation.js
+          test -s experience-foundation.css
           grep -q 'app.js' index.html
           grep -q 'styles.css' index.html
   deploy:
@@ -70,7 +84,12 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp index.html app.js styles.css company-detail.js company-detail.css external-portals.js external-portals.css gap-closure.js gap-closure.css reference-experience.js reference-experience.css premium-experience.js premium-experience.css motion-studio.js motion-studio.css ops-hardening.js ops-hardening.css _site/
+          # Include every root-level frontend JavaScript/CSS asset referenced by index.html.
+          cp index.html ./*.js ./*.css _site/
+          # Abort deployment if any local script/stylesheet reference is missing.
+          grep -oE '(src|href)="\\./[^"]+' index.html | cut -d'"' -f2 | sed 's#^\\./##' | while IFS= read -r asset; do
+            test -s "_site/$asset" || { echo "Missing deployed asset: $asset"; exit 1; }
+          done
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
