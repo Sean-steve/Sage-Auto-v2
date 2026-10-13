@@ -12,7 +12,7 @@ const pages=[
  ["marketing","Tour & setup"],["branded","Checkout & review"]
 ];
 const out=path.resolve("artifacts/visual-audit");fs.mkdirSync(out,{recursive:true});
-const summary={inspectedAt:new Date().toISOString(),pages:[],seriousOrCritical:0,moderateOrMinor:0};
+const summary={inspectedAt:new Date().toISOString(),pages:[],seriousOrCritical:0,moderateOrMinor:0,inspectionErrors:0};
 const browser=await chromium.launch({headless:true});
 try{
  for(const view of [{name:"desktop",width:1440,height:900},{name:"mobile",width:390,height:844}]){
@@ -27,7 +27,7 @@ try{
     summary.seriousOrCritical+=problems.filter(v=>v.impact==="serious"||v.impact==="critical").length;
     summary.moderateOrMinor+=problems.filter(v=>v.impact!=="serious"&&v.impact!=="critical").length;
     summary.pages.push({portal,route,viewport:view.name,passes:results.passes.length,violations:problems});
-   }catch(e){summary.seriousOrCritical++;summary.pages.push({portal,route,viewport:view.name,failed:String(e)})}
+   }catch(e){summary.inspectionErrors++;summary.pages.push({portal,route,viewport:view.name,failed:String(e)})}
   }
   await page.close();
  }
@@ -42,4 +42,7 @@ for(const inspected of summary.pages)for(const v of inspected.violations||[]){
 }
 console.log("Axe actionable rules:",JSON.stringify([...grouped.values()].sort((a,b)=>b.pages-a.pages).slice(0,15)));
 console.log("Axe audit:",summary.pages.length,"cases,",summary.seriousOrCritical,"serious/critical and",summary.moderateOrMinor,"other violations.");
-if(summary.seriousOrCritical)process.exitCode=1;
+const inspectionFailures=summary.pages.filter(p=>p.failed);
+const causes=[...new Set(inspectionFailures.map(p=>p.failed))];
+console.log("Axe inspection errors:",summary.inspectionErrors,"distinct causes:",JSON.stringify(causes.slice(0,6)));
+if(summary.seriousOrCritical||summary.inspectionErrors)process.exitCode=1;
