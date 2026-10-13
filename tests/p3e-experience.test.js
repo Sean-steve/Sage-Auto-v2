@@ -52,12 +52,12 @@ click("premium:fleetView:list");here('class="p-gallery is-list"');assert.ok(stor
 click("v2:asset",null,"V01");here("Vehicle asset profile");click("close");
 screen("company","Bookings");here("RESERVATION INTELLIGENCE");here("Reservation register");
 screen("renter","Overview");here("p-role-renter");here("Less time arranging.");here("Your current drive");
-screen("owner","Overview");here("p-role-owner");here("Your assets are working for you");
-screen("driver","Overview");here("p-role-driver");here("Ready for your next assignment");
+screen("owner","Overview");here("p-role-owner");here("Your vehicles. A clearer view.");
+screen("driver","Overview");here("p-role-driver");here("Your next assignment starts here");
 screen("corporate","Overview");here("p-role-corporate");
 screen("agent","Overview");here("p-role-agent");
 screen("service","Overview");here("p-role-service");
-screen("platform","Overview");here("p-role-platform");here("Platform at a glance");
+screen("platform","Overview");here("p-role-platform");here("The Sage Auto network");
 screen("marketing","Home");here("p-public-cover");here("Built for the");here('id="main-content"');
 click("premium:public-start");here("Everything a car hire business needs");
 screen("branded","Explore vehicles");here("p-public-cover");here("Find the perfect");here("Request dates");
