@@ -295,3 +295,56 @@ body.sage-studio .public-shell .d2-step.current :where(span,b){
 }
 body.sage-studio .main :where(.rj-status,.rj-existing-hint,.rj-detail span){font-weight:700}
 body.sage-studio .main :where(.op-toolbar small,.sx2-source){opacity:1}
+
+/* WCAG color audit — use high-contrast hues within the brand identity.
+   Role hero accents were previously pale on pastel backgrounds. */
+body.sage-studio .sx-role-page{--role-pop:#8d4539}
+body.sage-studio .sx-role-lavender{--role-pop:#54469a}
+body.sage-studio .sx-role-sky{--role-pop:#27628c}
+body.sage-studio .sx-role-steel{--role-pop:#40516e}
+body.sage-studio .sx-role-lime{--role-pop:#30654b}
+body.sage-studio .sx-role-coral{--role-pop:#934b3b}
+body.sage-studio .sx-role-purple{--role-pop:#504293}
+body.sage-studio .sx-role-left :is(p,.sx-overline),
+body.sage-studio .sx-role-small,
+body.sage-studio .sx-role-footer > span{opacity:1}
+body.sage-studio .sx-role-left p{color:var(--role-ink)}
+body.sage-studio .sx-role-small,
+body.sage-studio .sx-role-footer > span{color:var(--role-ink)}
+body.sage-studio .main .shortcut kbd{
+ color:#3e4a60;background:#fafbfc;border-color:#b8c3d4;
+}
+body.sage-studio .main th,
+body.sage-studio .main .card-header p{
+ color:#4d596a;
+}
+body.sage-studio .main :where(.rx-allocation-grid th span,.rx-allocation-grid th small){
+ color:#475c50;
+}
+body.sage-studio :where(.main,.public-shell) .vehicle-meta{
+ color:#515c70;
+}
+body.sage-studio .public-shell .surface-card span:not(.surface-icon){
+ color:#4e586c;
+}
+body.sage-studio .main .task-details small,
+body.sage-studio .main .op-workspace :is(.op-payments,.op-handover,.op-incidents) small,
+body.sage-studio .main .op-toolbar small,
+body.sage-studio .main .rj-existing-hint,
+body.sage-studio .main .empty-state{
+ color:#4f5a70;
+}
+body.sage-studio .d2-step{
+ color:#4c5c6f;
+}
+body.sage-studio .d2-step > span{
+ color:#405266;background:#e2eaee;
+}
+body.sage-studio .d2-step.current,
+body.sage-studio .d2-step.done{
+ color:#1e5449;
+}
+body.sage-studio .d2-step.current > span,
+body.sage-studio .d2-step.done > span{
+ color:#fff;background:#176b5c;
+}
