@@ -64,4 +64,7 @@ screen("branded","Explore vehicles");here("p-public-cover");here("Find the perfe
 click("premium:checkout");here("RENTAL");
 screen("marketplace","Discover");here("p-public-cover");here("Your next drive");
 screen("company","Overview");here("p-command-hero");
+click("new-booking");here("p-car-chooser");here("p-booking-preview");
+click("premium:chooseCar:V03");here("Mercedes C200");here("KES 24,000");
+click("close");click("premium:density");assert.ok(storage.has("sage-auto-v2-premium-pref"));
 console.log("P3-E PASS: premium dashboard + functional queue, spotlight, fleet filters/layout, preserved asset/booking flow, seven role homes, public/checkout and marketplace routes.");
