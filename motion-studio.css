@@ -59,6 +59,14 @@ body.sage-studio .rx-work-controls select:focus-visible,body.sage-studio .rx-dat
 .sx-context-link:hover{background:#EBEBF3;color:#343C79}
 .sx-context-link.sx-strong{color:#4E4DC3}
 .sx-context-link:focus-visible,.sx-button:focus-visible,.sx-filter-tab:focus-visible{outline:3px solid #8F88ED;outline-offset:3px}
+.sx-pins{display:flex;align-items:center;gap:3px;padding-right:8px;margin-right:3px;border-right:1px solid #DDDDE7}
+.sx-pin{border:1px solid transparent;background:transparent;color:#737992;padding:7px 10px;border-radius:8px;white-space:nowrap;font-weight:790;font-size:10px;max-width:122px;overflow:hidden;text-overflow:ellipsis}
+.sx-pin:hover{background:#EDECF9;color:#5550A9}
+.sx-pin.active{color:#514AC5;background:#EDEBFC;border-color:#E0DCF7}
+body.sage-studio[data-studio-theme="night"] .sx-pin{color:#C1C9E0}
+body.sage-studio[data-studio-theme="night"] .sx-pin.active{background:#393758;color:#DFDCFF}
+@media(max-width:1320px){.sx-pins .sx-pin:nth-child(n+3){display:none}}
+@media(max-width:1070px){.sx-pins{display:none}}
 /* Global component grammar */
 .sx-overline{font-size:10px;letter-spacing:.19em;text-transform:uppercase;font-weight:860;color:#7775BC;font-family:"DM Sans",sans-serif}
 .sx-edition{font-size:10px;letter-spacing:.16em;font-weight:860;color:#797F9A}
