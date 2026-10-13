@@ -33,7 +33,7 @@
   var rowHtml=t.map(function(item){
    var applicable=item.status==="Active"&&Object.prototype.hasOwnProperty.call(prices,item.plan);
    var amount=applicable?prices[item.plan]:0;
-   return '<tr data-sx2-tenant-row data-plan="'+escape(item.plan)+'" data-region="'+escape(item.region)+'" data-active="'+(applicable?"true":"false")+'" data-amount="'+amount+'">'+
+   return '<tr data-sx2-tenant-row data-plan="'+escape(item.plan)+'" data-region="'+escape(item.region)+'" data-active="'+(item.status==="Active"?"true":"false")+'" data-rated="'+(applicable?"true":"false")+'" data-amount="'+amount+'">'+
     '<td><strong>'+escape(item.name)+'</strong><small>'+escape(item.region)+'</small></td>'+
     '<td>'+escape(item.plan||"Unknown")+'</td>'+
     '<td><span class="sx2-badge '+(item.status==="Active"?"success":"warning")+'">'+escape(item.status||"Unknown")+'</span></td>'+
@@ -89,11 +89,11 @@
    var show=(selections.plan==="All plans"||row.dataset.plan===selections.plan)&&
     (selections.region==="All regions"||row.dataset.region===selections.region);
    row.hidden=!show;if(!show)return;
-   count++;if(row.dataset.active==="true"){active++;known++;amount+=Number(row.dataset.amount)||0;}
+   count++;if(row.dataset.active==="true"){active++;if(row.dataset.rated==="true"){known++;amount+=Number(row.dataset.amount)||0;}}
   });
   function set(id,value){var node=document.getElementById(id);if(node)node.textContent=value;}
   set("sx2-run-rate",money(amount));set("sx2-visible-count",count+" companies");
-  set("sx2-run-rate-desc",known+" sample active companies with known illustrative rates.");
+  set("sx2-run-rate-desc",known+" sample active companies with known illustrative rates; "+(active-known)+" active companies with unknown plan rates.");
   set("sx2-filter-summary",count+" sample companies in scope · "+active+" active. Filters do not change underlying records.");
   var bridgeFinal=rootNode.querySelector(".sx2-bridge-step.final strong");if(bridgeFinal)bridgeFinal.textContent=money(amount);
   var emptyRow=document.getElementById("sx2-no-tenants");if(emptyRow)emptyRow.hidden=count>0;
