@@ -98,6 +98,7 @@ if(ix>=0){const next=html.indexOf("</section>",ix);if(next>=0)transformed=html.s
 else {const fallback='<section class="public-hero">',i2=html.indexOf(fallback),n2=html.indexOf("</section>",i2);if(i2>=0&&n2>=0)transformed=html.slice(0,i2)+banner+html.slice(n2+10);else if(portal==="branded")transformed=html.replace('<main id="main-content">','<main id="main-content">'+banner)}
 return '<div class="p-premium-public p-public-'+portal+'">'+transformed+'</div>'}
 
+function captureBooking(c){if(c.state.modal!=="booking"||!document.querySelector)return;for(const key of ["name","vehicle","days","channel","pickup"]){const el=document.querySelector('.drawer [name="'+key+'"]');if(el&&el.value!==undefined)c.state.form[key]=el.value}}
 function decorateOverlay(c,markup){if(c.state.portal!=="company"||c.state.modal!=="booking"||!markup.includes('class="drawer-body"'))return markup;
 const v=c.db.vehicles.find(x=>x.id===(c.state.form?.vehicle||"V01"))||c.db.vehicles[0],duration=Number(c.state.form?.days||2);
 const step=Number(c.state.step||1);
@@ -117,13 +118,13 @@ if(cmd.startsWith("queue:")){state.queue=cmd.slice(6);c.render();return true}
 if(cmd.startsWith("spotlight:")){state.spotlight=(state.spotlight+Number(cmd.slice(10))+c.db.vehicles.length)%c.db.vehicles.length;c.render();return true}
 if(cmd.startsWith("fleetFilter:")){state.fleetFilter=cmd.slice(12);c.render();return true}
 if(cmd.startsWith("fleetView:")){state.fleetView=cmd.slice(10);savePrefs();c.render();return true}
-if(cmd.startsWith("chooseCar:")){const id=cmd.slice(10),car=c.db.vehicles.find(x=>x.id===id);if(car&&car.status==="Available"){c.state.form.vehicle=car.id;c.render()}return true}
+if(cmd.startsWith("chooseCar:")){const id=cmd.slice(10),car=c.db.vehicles.find(x=>x.id===id);if(car&&car.status==="Available"){captureBooking(c);c.state.form.vehicle=car.id;c.render()}return true}
 if(cmd==="density"){state.density=state.density==="compact"?"comfortable":"compact";savePrefs();c.render();c.showToast("Display density: "+state.density+".");return true}
 if(cmd==="public-start"){c.navigate("marketing","Features");return true}
 if(cmd==="checkout"){c.navigate("branded","Checkout & review");return true}
 if(cmd==="browse"){c.navigate("marketplace","Browse cars");return true}
 return false}
 function savePrefs(){try{localStorage.setItem(storeKey,JSON.stringify({fleetView:state.fleetView,density:state.density}))}catch(e){}}
-P.decorateOverlay=decorateOverlay;P.company=company;P.roleHome=roleHero;P.public=enhancePublic;P.shell=styleShell;P.action=run;P.photo=photo;P.apply=applyShell;P.state=state;
+P.captureBooking=captureBooking;P.decorateOverlay=decorateOverlay;P.company=company;P.roleHome=roleHero;P.public=enhancePublic;P.shell=styleShell;P.action=run;P.photo=photo;P.apply=applyShell;P.state=state;
 applyShell();window.SagePremiumV2=P;
 })();
