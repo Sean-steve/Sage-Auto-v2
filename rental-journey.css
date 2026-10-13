@@ -87,3 +87,23 @@
 @media(prefers-reduced-motion:reduce){
  .rj-workspace *,.rj-workspace *:before,.rj-workspace *:after{transition:none!important;animation:none!important}
 }
+
+/* Browser QA CH-003..010: constrain deeply nested legacy table/calendar min-content.
+   Keep old actions reachable via the focusable horizontal-scrolling region. */
+.rj-workspace{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+.rj-existing{width:100%;max-width:100%;min-width:0}
+.rj-existing-content{
+  display:block;max-width:100%;min-width:0;
+  overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;
+  scrollbar-width:thin;
+}
+.rj-existing-content>:where(.rx-view,.rx-panel,.op-workspace,.p-surface,.card,.table-card){
+  min-width:0;max-width:100%;
+}
+.rj-existing-content :where(.table-wrap,.rx-table-wrap,.rx-calendar-wrap,.op-table-wrap){
+  max-width:100%;overflow-x:auto;scrollbar-width:thin
+}
+@media(max-width:1024px){
+  .rj-existing-content .rx-calendar{overflow-x:auto;max-width:100%}
+  .rj-existing-content :where(table,.rx-grid-table){max-width:none}
+}
