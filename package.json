@@ -1,0 +1,15 @@
+{
+  "name": "sage-auto-v2",
+  "version": "0.3.2",
+  "private": true,
+  "description": "Frontend-only multi-sided car hire experience prototype",
+  "scripts": {
+    "test:mock": "node tests/smoke.test.js && node tests/company-workflows.test.js && node tests/company-edge-cases.test.js && node tests/external-portals.test.js && node tests/p3d-quality.test.js && node tests/p3d2-gap-closure.test.js",
+    "test:visual": "node tests/visual-audit.mjs",
+    "test:accessibility": "node tests/accessibility-audit.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0",
+    "@axe-core/playwright": "^4.10.0"
+  }
+}
