@@ -87,7 +87,7 @@ jobs:
           # Include every root-level frontend JavaScript/CSS asset referenced by index.html.
           cp index.html ./*.js ./*.css _site/
           # Abort deployment if any local script/stylesheet reference is missing.
-          grep -oE '(src|href)="\\./[^"]+' index.html | cut -d'"' -f2 | sed 's#^\\./##' | while IFS= read -r asset; do
+          grep -oE '(src|href)="[.]/[^"]+' index.html | cut -d'"' -f2 | sed 's#^[.]/##' | while IFS= read -r asset; do
             test -s "_site/$asset" || { echo "Missing deployed asset: $asset"; exit 1; }
           done
           touch _site/.nojekyll
