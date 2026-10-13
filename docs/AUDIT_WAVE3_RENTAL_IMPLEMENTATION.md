@@ -57,3 +57,14 @@ The Sage Auto V2 repository is an **interactive browser-local prototype**, not t
 - Real implementation against the Sage Auto backend: authoritative allocation locking, payment callbacks, signature/KYC, invoice ledger, owner settlement transfer receipts, role enforcement and durable server audit trail. This is a **separate production integration phase**.
 
 **No merge to `main` is authorized by an unverified or failed QA result.**
+
+
+## Executed QA evidence — latest completed browser and Axe scans
+
+- **Source-level legacy + Wave 1/2/3:** `Source and existing workflow contract tests` — PASS, including existing booking, inspection, payment, return, owner and visual integration mocks.
+- **Browser (Chromium; executed GitHub Actions):** 10 Revenue/company route checks + 30 onboarding route checks + **36 rental/checkout/renter/owner checks**, all passed after fixing the availability drawer and mobile overflow. Screenshots and JSON findings are uploaded in the Actions artifact.
+- **Accessibility:** Axe audit originally failed to execute because the runner used `browser.newPage()`; now it uses an explicit `browser.newContext()`. The first authentic scan identified 34 serious contrast/focus findings across 32 inspections. Remediation addressed keyboard scroll focus and multiple common text styles. The most recently reviewed completed scan reported **20 screens with serious color-contrast issues; zero execution errors**. More remediation commits have been made, but the last run must be checked separately. **Do not mark accessibility PASS until verified.**
+- **No production backend claims:** All UI/ledger results are browser-local examples; a green mocked financial state is not bank, MPESA, insurance, or ownership authorization evidence.
+
+Release remains **DRAFT / DO NOT MERGE** if the latest Axe gate is red or manual screenshot/a11y review remains incomplete.
+
