@@ -4,7 +4,7 @@
 (function(){"use strict";
 var G={};
 var SEED={
- signup:{email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",step:1,emailVerified:false,accountCreated:false},
+ signup:{email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",planSelected:false,step:1,emailVerified:false,accountCreated:false},
  subscriptionRecovery:{company:"Nairobi Drive",state:"Active",graceUntil:"2026-11-01",history:[]},
  onboarding:{branch:false,team:false,fleet:false,pricing:false,website:false},
  tenantTasks:[{id:"PR-01",company:"Safari Trails Rentals",status:"Awaiting review",requestedPlan:"Growth",notes:"Manual tenant provisioning preview"}],
@@ -236,7 +236,7 @@ if(type==="refund-approve"||type==="refund-reject"){x=db.refundReviews.find(t=>t
 if(type==="provision-reviewed"){x=db.tenantTasks.find(t=>t.id===id);if(x){x.status="Reviewed; not provisioned";return save(c,"Provisioning request reviewed; no tenant created.")}return true}
 if(type==="platform-review"){x=db.platformEvents.find(t=>t.id===id);if(x){x.status="In review";return save(c,"Incident triage saved in demo.")}return true}
 if(type==="auth-preview"||type==="auth-recovery"){c.showToast("Authentication is not connected. Do not enter real account credentials.");return true}
-if(type==="plan-select"){db.signup.plan=id;return save(c,"Demo plan preference selected; no charge made.")}
+if(type==="plan-select"){if(!["Starter","Growth","Pro"].includes(id)){c.showToast("Choose a displayed sample plan.");return true}db.signup.plan=id;db.signup.planSelected=true;return save(c,"Demo plan preference selected; no charge made.")}
 if(type==="verify-demo"){if(val("verification")!=="123456"){c.showToast("Enter the example verification code shown on this screen.");return true}db.signup.emailVerified=true;c.save();c.navigate("marketing","Business setup");c.showToast("Demo code accepted; no real email verification performed.");return true}
 if(type==="save-business"){if(!val("company")||!val("contact")){c.showToast("Enter the company name and contact before continuing.");return true}db.signup.company=val("company");db.signup.contact=val("contact");db.signup.region=val("region");c.save();c.navigate("marketing","Choose plan");return true}
 if(type==="go-checkout"){db.checkout.step=1;c.save();c.navigate("branded","Checkout & review");return true}
