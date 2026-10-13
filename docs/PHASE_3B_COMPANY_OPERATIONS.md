@@ -42,7 +42,7 @@ The existing **Overview, Bookings and Rentals** pages remain, but booking transi
 
 1. Open Bookings → create mock reservation. Choose a vehicle, pickup date, duration, channel, and renter name.
 2. A sample availability check considers overlapping reservations and holds, existing rental/service state and the demo compliance flag.
-3. Booking starts at **Awaiting payment**, with no money transferred.
+3. Booking starts at **Awaiting payment**, with no money transferred. The mock reservation now includes a selectable pickup date and refuses overlapping demo allocations.
 4. Open payment drawer, select a manual demo method, add reference, record receipt; a partial amount remains unpaid; a fully recorded balance changes to **Confirmed**.
 5. Open the **Contract & handover** drawer; acknowledge the mock contract/identity review; complete all **12 required vehicle inspection sections**.
 6. If a defect is flagged, record issues and block handover. If no defects, compliant and no overlapping active rental, transition **Confirmed → Active**, set vehicle **On rental**, and record inspection.
@@ -101,6 +101,7 @@ Tests require Node:
     node --check company-detail.js
     node tests/smoke.test.js
     node tests/company-workflows.test.js
+    node tests/company-edge-cases.test.js
 
 To publish GitHub Pages: Repository Settings → Pages → Source: GitHub Actions. A workflow existing in the repo does **not** guarantee Pages is already live.
 
