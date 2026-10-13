@@ -240,6 +240,7 @@ function drawer(c){
 }
 function action(cmd,node,c){
  if(!cmd.startsWith("journey:"))return false;
+ if(c.state?.portal!=="company"){c.showToast("This operator action is only available in the company demo workspace.");return true;}
  const raw=cmd.slice(8),id=node.getAttribute("data-id");
  if(raw.startsWith("goto:")){c.navigate("company",raw.slice(5));return true;}
  if(raw==="close"){c.state.modal=null;c.render();return true;}
@@ -280,6 +281,7 @@ function action(cmd,node,c){
  return true;
 }
 function overrideLegacyPayout(c,p,ack){
+ if(c.state?.portal!=="company"){c.showToast("Owner payout changes require the company operator workspace.");return true;}
  if(!ack){c.showToast("Acknowledge the simulated review first.");return true;}
  const res=core.payoutNext(c.db,p.id,"Approved (demo)");
  if(res.ok){c.save();c.state.modal=null;c.render();}c.showToast(res.message);
