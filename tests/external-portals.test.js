@@ -30,4 +30,6 @@ role("branded","Explore vehicles");click("p3c:request-car",undefined,"V03");cont
 role("marketing","Get started");click("p3c:sign-up");submit("sign-up",{name:"Roadstar Mobility",contact:"hello@example.test",message:"Need a company account"});assert.equal(state().publicEnquiries[0].source,"sign-up");assert.ok(!state().tenants.some(x=>x.name==="Roadstar Mobility"),"signup enquiry must not provision real tenant");
 role("marketplace","Saved vehicles");contains("Toyota Prado TX");
 role("company","Leads & enquiries");contains("Visitor One");contains("Brighter Ltd");
-console.log("P3-C PASS: 70 routes; renter privacy; extension; owner scoping; driver assignment; corporate approval; agent attribution; partner evidence; tenant review; public enquiry and cross-portal lead pipeline.");
+role("company","Customer requests");contains("RQ-");let extension=state().requests[0];click("p3c:operator-request",undefined,extension.id);contains("Rental change request");click("p3c:operator-request-approve",undefined,extension.id);assert.equal(state().requests[0].status,"Approved in principle");noBookingChange("SA-1042","Active");
+role("company","Partner updates");contains("WO-014");click("p3c:operator-service-review",undefined,"WO-014");assert.equal(state().works.find(w=>w.id==="WO-014").status,"In progress");
+console.log("P3-C PASS: 70 routes; renter privacy; extension; owner scoping; driver assignment; corporate approval; agent attribution; partner evidence; tenant review; public enquiry and cross-portal lead pipeline; company extension and workshop-review inboxes.");
