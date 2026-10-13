@@ -36,7 +36,7 @@ function renderPage(page){
  state.portal="company";state.page=page;
  const result=api.decorateCompany(ctx,'<div id="existing-module">Legacy '+page+' form and actions</div>');
  assert.ok(result.includes('id="existing-module"'),"Existing page not removed: "+page);
- assert.ok(result.includes("Complete existing "+page+" tools"),"Existing controls remain findable");
+ assert.ok(result.includes("Complete existing "+page.replace(/&/g,"&amp;")+" tools"),"Existing controls remain findable");
  assert.ok(result.includes('data-action="journey:goto:Finance &amp; payments"')||result.includes('data-action="journey:goto:Finance & payments"'));
  return result;
 }
