@@ -184,7 +184,7 @@ if(action==="notifications"){showToast("4 sample alerts · see the action centre
 if(action==="guide"){showToast("Phase 3 visual preview: mock data only; no backend connected.");return}
 if(action==="enter-company"){navigate("company","Overview");return}
 if(action==="portal-primary"){var nav=def().nav[0][1];navigate(state.portal,nav[1]||nav[0]);return}
-if(action==="close-outside"){if(node===event.target){state.modal=null;state.command=false;render()}return}
+if(action==="close-outside"){state.modal=null;state.command=false;render();return}
 showToast("This feature is mapped for a later Phase 3 screen pass.")}
 document.addEventListener("click",function(e){var node=e.target.closest("[data-action]");if(!node)return;var act=node.getAttribute("data-action");if(act==="close-outside"&&e.target!==node)return;e.preventDefault();runAction(act,node)});
 document.addEventListener("input",function(e){if(e.target.id==="table-search"){var s=e.target.value.trim().toLowerCase();document.querySelectorAll("#records-body tr").forEach(function(tr){tr.hidden=!tr.dataset.search.includes(s)})}if(e.target.id==="command-input"){var q=e.target.value.trim().toLowerCase();document.querySelectorAll(".command-row").forEach(function(b){b.hidden=!b.dataset.filter.includes(q)})}});
