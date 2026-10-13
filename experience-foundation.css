@@ -369,3 +369,31 @@ body.sage-studio .main :where(.op-metric em,.op-metric small,.op-toolbar em,
 body.sage-studio .main .rj-workspace :where(.rj-panel-head p,.rj-empty,.rj-existing-hint){
  color:#354358!important;opacity:1!important
 }
+
+/* Remaining WCAG contrast points in legacy table, notice and operations queue. */
+body.sage-studio .main .row-secondary,
+body.sage-studio .main .op-board-header p,
+body.sage-studio .main .op-filter,
+body.sage-studio .main .card-header > div > p,
+body.sage-studio .main .notice > div > p,
+body.sage-studio .main .flow-step p{
+ color:#4e5a6c;
+}
+body.sage-studio .public-shell .notice > div > p,
+body.sage-studio .public-shell .card-header > div > p,
+body.sage-studio .public-shell .flow-step p,
+body.sage-studio .public-shell .field label{
+ color:#4d596a;
+}
+body.sage-studio .main .flow-number,
+body.sage-studio .public-shell .flow-number{
+ color:#165d4d;background:#e5f3ed;
+}
+body.sage-studio .public-shell .d2-step.current > span,
+body.sage-studio .public-shell .d2-step.done > span{
+ color:#ffffff;background:#176b5c;
+}
+body.sage-studio .main .op-board-header p,
+body.sage-studio .main .op-filter-tabs .op-filter{
+ color:#475368;
+}
