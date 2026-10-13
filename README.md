@@ -33,6 +33,15 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [P3-B company operations](docs/PHASE_3B_COMPANY_OPERATIONS.md)
 - New test suite: `node tests/external-portals.test.js`
 
+## Phase 3-D.2 · Gap-closure frontend and visual QA
+
+- **215 planned screen contracts** have at least a mock or partial design route: **129 interactive mocks, 86 partials, 0 without an interface**.
+- Added guided operator signup, branded rental checkout review, booking amendment requests, dispatch, availability policy, offers, refund approvals, invoice detail, tenant provisioning/governance and subscription lapse/recovery previews.
+- **No production API, identity verification, real account provisioning, payment provider, tenant isolation or event worker is connected.**
+- [Gap-closure and visual QA report](docs/PHASE3D2_GAP_CLOSURE_REPORT.md)
+- [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
+- Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
+
 ## Phase 3-D · UI/UX reconciliation and audit
 
 The original **215-screen Phase 2 inventory**, **22 cross-user journeys**, and **45-screen previous company workspace** have been reconciled in:
@@ -42,7 +51,7 @@ The original **215-screen Phase 2 inventory**, **22 cross-user journeys**, and *
 - [22-journey reconciliation](docs/PHASE3D_JOURNEY_RECONCILIATION.csv)
 - [Previous 45-screen crosswalk](docs/PHASE3D_LEGACY45_CROSSWALK.csv)
 
-**Coverage:** 113 interactive mock contracts, 82 visual/partial, 20 not implemented. **Not signed off**: critical onboarding/checkout/platform screens and real-browser visual & accessibility checks remain outstanding.
+**Historical P3-D baseline:** 113 interactive mock contracts, 82 visual/partial, 20 not implemented (superseded by the P3-D.2 report). **Not signed off**: critical onboarding/checkout/platform screens and real-browser visual & accessibility checks remain outstanding.
 
 P3-D added renter and driver incident reports → company incident triage, an accessible skip link, public page main landmarks, dialog focus management and motion/keyboard improvements. Run `node tests/p3d-quality.test.js` for the audit regression checks.
 
