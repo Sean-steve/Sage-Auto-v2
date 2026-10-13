@@ -16,7 +16,8 @@ const summary={inspectedAt:new Date().toISOString(),pages:[],seriousOrCritical:0
 const browser=await chromium.launch({headless:true});
 try{
  for(const view of [{name:"desktop",width:1440,height:900},{name:"mobile",width:390,height:844}]){
-  const page=await browser.newPage({viewport:{width:view.width,height:view.height},reducedMotion:"reduce"});
+  const context=await browser.newContext({viewport:{width:view.width,height:view.height},reducedMotion:"reduce"});
+  const page=await context.newPage();
   for(const [portal,route] of pages){
    const url=base+"/#"+portal+"/"+encodeURIComponent(route);
    try{
@@ -29,7 +30,7 @@ try{
     summary.pages.push({portal,route,viewport:view.name,passes:results.passes.length,violations:problems});
    }catch(e){summary.inspectionErrors++;summary.pages.push({portal,route,viewport:view.name,failed:String(e)})}
   }
-  await page.close();
+  await context.close();
  }
 }finally{await browser.close()}
 fs.writeFileSync(path.join(out,"accessibility.json"),JSON.stringify(summary,null,2));
