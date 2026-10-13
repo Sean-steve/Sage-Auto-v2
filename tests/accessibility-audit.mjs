@@ -33,5 +33,13 @@ try{
  }
 }finally{await browser.close()}
 fs.writeFileSync(path.join(out,"accessibility.json"),JSON.stringify(summary,null,2));
+const grouped=new Map();
+for(const inspected of summary.pages)for(const v of inspected.violations||[]){
+ const prev=grouped.get(v.id)||{rule:v.id,impact:v.impact,pages:0,selectors:[]};
+ prev.pages++;
+ for(const selector of v.selectors||[])if(prev.selectors.length<4&&!prev.selectors.includes(selector))prev.selectors.push(selector);
+ grouped.set(v.id,prev);
+}
+console.log("Axe actionable rules:",JSON.stringify([...grouped.values()].sort((a,b)=>b.pages-a.pages).slice(0,15)));
 console.log("Axe audit:",summary.pages.length,"cases,",summary.seriousOrCritical,"serious/critical and",summary.moderateOrMinor,"other violations.");
 if(summary.seriousOrCritical)process.exitCode=1;
