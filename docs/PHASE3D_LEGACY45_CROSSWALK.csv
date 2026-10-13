@@ -35,7 +35,7 @@ old_screen,old_title,new_screen_ids,all_interactive_mock,unresolved_screen_ids
 "34","Settlement Details","S03-62","yes",""
 "35","Financial History","S03-56","no","S03-56"
 "36","Pricing Centre","S03-47","yes",""
-"37","Rates & Offers","S03-48;S03-49","no","S03-48;S03-49"
+"37","Rates & Offers","S03-48;S03-49","no","S03-48"
 "38","Leads & Enquiries","S03-06;S03-07","no","S03-07"
 "39","Website Studio","S03-66;S03-67;S03-68","no","S03-67;S03-68"
 "40","Business Insights","S03-69","yes",""
