@@ -1,0 +1,109 @@
+/* Sage Auto V2 — CH-003..010 shared rental journey.
+  Scope to rj- prefix; retain all existing company/user interface and actions.
+*/
+.rj-workspace{display:grid;gap:18px;max-width:1660px;margin-inline:auto;color:var(--color-text-primary,#1c2036);font-family:"DM Sans",sans-serif}
+.rj-workspace *{box-sizing:border-box}
+.rj-journey-nav{display:flex;gap:7px;padding:7px;background:#f1f0f7;border:1px solid #e4e2ef;border-radius:14px;overflow-x:auto;scrollbar-width:thin;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+.rj-journey-nav button{border:1px solid transparent;background:transparent;color:#5d6378;font-size:11px;line-height:1.3;font-weight:750;border-radius:10px;padding:9px 12px;display:inline-flex;align-items:center;gap:8px;min-height:41px;white-space:nowrap;flex-shrink:0;scroll-snap-align:center;transition:background .17s}
+.rj-journey-nav button:hover{background:#fff;color:#30295f}
+.rj-journey-nav button.active{background:#fff;border-color:#dfdced;color:#5246be;box-shadow:0 3px 10px #2720360c}
+.rj-num{font-size:10px;border:1px solid #d1cfdf;border-radius:50%;min-width:22px;height:22px;display:inline-grid;place-items:center;color:#77728e}
+.rj-journey-nav button.active .rj-num{background:#6258cf;color:#fff;border-color:#6258cf}
+.rj-context{display:grid;gap:17px}
+.rj-title{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;flex-wrap:wrap;padding:4px 1px 0}
+.rj-title h2{font-family:"Plus Jakarta Sans",sans-serif;font-size:clamp(21px,2vw,31px);letter-spacing:-.055em;line-height:1.26;margin:8px 0 5px;color:#25283f}
+.rj-title p{font-size:13px;line-height:1.65;color:#687186;max-width:760px}
+.rj-status{font-size:11px;line-height:1.35;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:#f0eff9;color:#59518c;font-weight:750;white-space:normal}
+.rj-status:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.rj-status.success{background:#e8f6ef;color:#236345}
+.rj-status.warning{background:#fff2e5;color:#9d521f}
+.rj-status.muted{background:#f0f1f4;color:#586072}
+.rj-panel{background:#fff;border:1px solid #e6e6ed;box-shadow:0 9px 29px #171b2b09;border-radius:16px;padding:19px 20px;display:grid;gap:16px}
+.rj-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.rj-panel-head h3{font-size:16px;color:#2c2d4e;letter-spacing:-.035em}
+.rj-panel-head p{font-size:12px;line-height:1.65;color:#778095;max-width:750px}
+.rj-filters{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.rj-filters label{display:grid;gap:6px;color:#5d6579;font-size:12px;font-weight:750;flex:1 1 145px;max-width:250px}
+.rj-filters .sx2-input{min-height:42px;background:#fff;font-size:12px;padding:8px 11px}
+.rj-btn{font-size:11px;line-height:1.3;min-height:40px;padding:9px 13px;border-radius:9px;border:1px solid #dbdaec;background:#fff;color:#514cb4;font-weight:800;white-space:normal;text-align:center;cursor:pointer;transition:background .15s,border-color .15s}
+.rj-btn:hover{background:#f0efff;border-color:#bcb8e9}
+.rj-btn.primary{color:#fff;background:#6258d4;border-color:#6258d4}
+.rj-btn.primary:hover{background:#4f45b3}
+.rj-grid{display:grid;gap:9px}
+.rj-slot{display:grid;grid-template-columns:minmax(170px,.85fr) minmax(230px,1.5fr) auto;align-items:center;gap:14px;border:1px solid #e8e8ef;border-radius:12px;padding:13px 15px;background:linear-gradient(110deg,#fff,#fbfbfe)}
+.rj-slot:hover{border-color:#d5d1ed}
+.rj-slot>div{display:grid;gap:5px;min-width:0}
+.rj-slot strong{font-size:12px;color:#25293e;font-weight:850;overflow-wrap:anywhere}
+.rj-slot small{color:#798095;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.rj-slot .rj-status{justify-self:start}
+.rj-slot.ok{border-left:3px solid #469a76}
+.rj-slot.blocked{border-left:3px solid #c67b41}
+.rj-empty{margin:4px 0 8px;color:#7b8193;font-size:12px;line-height:1.7;background:#f9f9fc;border-radius:10px;padding:16px}
+.rj-notice{background:#f8f7ff;border:1px solid #e8e4ff;border-left:3px solid #8176dd;padding:12px 15px;color:#5b5a82;font-size:12px;line-height:1.7;border-radius:10px}
+.rj-existing{border:1px solid #dfe2eb;border-radius:14px;background:#fff;min-width:0}
+.rj-existing>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:11px;padding:13px 16px;font-size:12px;color:#4e5480;font-weight:850;list-style:none;border-radius:14px}
+.rj-existing>summary::-webkit-details-marker{display:none}
+.rj-existing>summary:after{content:"⌄";font-size:19px;line-height:1}
+.rj-existing:not([open])>summary:after{content:"›"}
+.rj-existing:not([open])>summary:hover{background:#f7f7fb}
+.rj-existing-hint{font-size:11px;color:#8a92a6;font-weight:550}
+.rj-existing-content{padding:18px;border-top:1px solid #e6e7ec;display:grid;gap:16px;min-width:0}
+.rj-existing-content>.page-header,.rj-existing-content>.op-header{margin-top:0}
+.rj-existing-content .table-wrap{max-width:100%;overflow-x:auto}
+.rj-explain{display:grid;gap:11px;color:#4d5470;font-size:13px;line-height:1.6}
+.rj-explain h3{font-size:15px;margin-top:9px}
+.rj-explain p{line-height:1.7;color:#687186}
+.rj-detail{display:flex;gap:18px;justify-content:space-between;align-items:baseline;border-bottom:1px solid #ececf0;padding:10px 0}
+.rj-detail span{color:#777c8d;font-size:12px}
+.rj-detail strong{font-size:12px;overflow-wrap:anywhere;text-align:right;color:#272946}
+.rj-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.rj-drawer .drawer-body{overflow-y:auto}
+.rj-drawer .rj-btn{min-width:125px}
+.rj-checkout-note{max-width:1000px;margin:24px auto;padding:22px 25px;background:#f8f7ff;border:1px solid #dbd6f5;border-left:4px solid #655acb;border-radius:14px}
+.rj-checkout-note h2{font-size:19px;letter-spacing:-.03em}
+.rj-checkout-note p{font-size:13px;margin:12px 0;line-height:1.7;color:#6d668e}
+.rj-checkout-note strong{font-size:13px;color:#40348b;display:block}
+.rj-external-line{margin:12px 0 16px;background:#f1f2fa;border:1px solid #e1e3f3;border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:11px;color:#575d84;font-size:12px}
+.rj-external-line strong{color:#434577;flex-shrink:0}
+.rj-workspace :is(button,select,input,summary):focus-visible,.rj-external-line:focus-visible{outline:3px solid #655adb;outline-offset:3px}
+.rj-workspace [hidden],.rj-workspace tr[hidden]{display:none!important}
+@media(max-width:1140px){
+ .rj-slot{grid-template-columns:minmax(0,1fr) auto}
+ .rj-slot>div:nth-child(2){grid-column:1}
+ .rj-slot>.rj-btn{grid-column:2;grid-row:1/3}
+}
+@media(max-width:760px){
+ .rj-slot{grid-template-columns:1fr;gap:10px}
+ .rj-slot>div:nth-child(2){grid-column:1}
+ .rj-slot>.rj-btn{grid-column:1;grid-row:auto;width:100%}
+ .rj-existing-hint{display:none}
+ .rj-filters label{max-width:none}
+ .rj-filters>.rj-btn{flex:1 1 180px}
+ .rj-panel{padding:16px 13px}
+ .rj-existing-content{padding:14px}
+ .rj-external-line{display:grid;gap:5px}
+ .rj-detail{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+ .rj-workspace *,.rj-workspace *:before,.rj-workspace *:after{transition:none!important;animation:none!important}
+}
+
+/* Browser QA CH-003..010: constrain deeply nested legacy table/calendar min-content.
+   Keep old actions reachable via the focusable horizontal-scrolling region. */
+.rj-workspace{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+.rj-existing{width:100%;max-width:100%;min-width:0}
+.rj-existing-content{
+  display:block;max-width:100%;min-width:0;
+  overflow-x:auto;overflow-y:visible;overscroll-behavior-x:contain;
+  scrollbar-width:thin;
+}
+.rj-existing-content>:where(.rx-view,.rx-panel,.op-workspace,.p-surface,.card,.table-card){
+  min-width:0;max-width:100%;
+}
+.rj-existing-content :where(.table-wrap,.rx-table-wrap,.rx-calendar-wrap,.op-table-wrap){
+  max-width:100%;overflow-x:auto;scrollbar-width:thin
+}
+@media(max-width:1024px){
+  .rj-existing-content .rx-calendar{overflow-x:auto;max-width:100%}
+  .rj-existing-content :where(table,.rx-grid-table){max-width:none}
+}

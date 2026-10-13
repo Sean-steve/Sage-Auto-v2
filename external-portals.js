@@ -205,6 +205,7 @@ if(p==="Subscriptions")return normal(c,"Subscriptions & entitlements","Business 
 tableCompanies+section("Indicative plan limits","Proposed product tiers, not final commercial pricing",
 '<div class="pad-22">'+[["Starter","5 vehicles","1 branch"],["Growth","50 vehicles","5 branches"],["Pro","Custom caps","Advanced workflows"]].map(function(s){return data(c,s[0],s[1]+" · "+s[2])}).join("")+'</div>')+
 notice(c,"Billing is not connected","No live subscription provider, invoice schedule or entitlement enforcement is active."),"Companies","page:Companies");
+if(p==="Revenue"&&window.SageExperienceV2)return window.SageExperienceV2.renderRevenue(c,ten);
 if(p==="Revenue")return normal(c,"SaaS revenue overview","Operator subscription performance—not car rental revenue.",
 counts(c,[["Active tenants",active.length,"Illustrative count","briefcase"],["Estimated MRR",money(c,active.reduce(function(s,t){return s+({Starter:4999,Growth:9999,Pro:19999,Enterprise:40000}[t.plan]||0)},0)),"Plan assumptions only","wallet"],["Payment processing","Disconnected","Not reconciled","alert"],["Billing notices",0,"Example only","file"]])+
 notice(c,"Financial separation","Sage Auto's subscription revenue must not be confused with operators' rental payments or owner settlements."),"Subscription plans","page:Subscriptions");

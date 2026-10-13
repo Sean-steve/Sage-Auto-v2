@@ -1,0 +1,75 @@
+name: UI/UX Audit — Wave 1 / Revenue QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mock-regression:
+    name: Source and existing workflow contract tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax (all retained and new bundles)
+        run: |
+          for file in app.js company-detail.js external-portals.js gap-closure.js premium-experience.js reference-experience.js motion-studio.js ops-hardening.js experience-foundation.js onboarding-continuity.js rental-core.js rental-journey.js; do node --check "$file"; done
+      - name: Existing mock workflow suite
+        run: npm run test:mock
+      - name: Additional operational regressions
+        run: |
+          node tests/reference-experience.test.js
+          node tests/motion-studio.test.js
+          node tests/p3f-operations.test.js
+      - name: Audit-specific logic, filters and no-fake-receipt assertions
+        run: |
+          node tests/audit-wave1.test.js
+          node tests/audit-onboarding.test.js
+          node tests/rental-core.test.js
+          node tests/rental-journey.test.js
+
+  browser-qa:
+    name: Rendered revenue and work mode at five widths
+    needs: mock-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test dependencies
+        run: npm install --no-package-lock --ignore-scripts
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Serve static prototype
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/sage-wave1.log 2>&1 &
+          for n in $(seq 1 30); do
+            curl --fail --silent http://127.0.0.1:4173/ > /dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/sage-wave1.log
+          exit 1
+      - name: Screenshot and workflow assertions
+        run: |
+          node tests/audit-wave1-browser.mjs
+          node tests/audit-onboarding-browser.mjs
+          node tests/rental-journey-browser.mjs
+      - name: Existing accessibility audit
+        run: npm run test:accessibility
+      - name: Upload actual screenshots and findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sage-auto-audit-wave1-rendered-evidence
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 28

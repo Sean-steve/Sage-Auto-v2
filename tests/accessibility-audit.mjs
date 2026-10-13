@@ -12,11 +12,12 @@ const pages=[
  ["marketing","Tour & setup"],["branded","Checkout & review"]
 ];
 const out=path.resolve("artifacts/visual-audit");fs.mkdirSync(out,{recursive:true});
-const summary={inspectedAt:new Date().toISOString(),pages:[],seriousOrCritical:0,moderateOrMinor:0};
+const summary={inspectedAt:new Date().toISOString(),pages:[],seriousOrCritical:0,moderateOrMinor:0,inspectionErrors:0};
 const browser=await chromium.launch({headless:true});
 try{
  for(const view of [{name:"desktop",width:1440,height:900},{name:"mobile",width:390,height:844}]){
-  const page=await browser.newPage({viewport:{width:view.width,height:view.height},reducedMotion:"reduce"});
+  const context=await browser.newContext({viewport:{width:view.width,height:view.height},reducedMotion:"reduce"});
+  const page=await context.newPage();
   for(const [portal,route] of pages){
    const url=base+"/#"+portal+"/"+encodeURIComponent(route);
    try{
@@ -27,11 +28,31 @@ try{
     summary.seriousOrCritical+=problems.filter(v=>v.impact==="serious"||v.impact==="critical").length;
     summary.moderateOrMinor+=problems.filter(v=>v.impact!=="serious"&&v.impact!=="critical").length;
     summary.pages.push({portal,route,viewport:view.name,passes:results.passes.length,violations:problems});
-   }catch(e){summary.seriousOrCritical++;summary.pages.push({portal,route,viewport:view.name,failed:String(e)})}
+   }catch(e){summary.inspectionErrors++;summary.pages.push({portal,route,viewport:view.name,failed:String(e)})}
   }
-  await page.close();
+  await context.close();
  }
 }finally{await browser.close()}
 fs.writeFileSync(path.join(out,"accessibility.json"),JSON.stringify(summary,null,2));
+const grouped=new Map();
+for(const inspected of summary.pages)for(const v of inspected.violations||[]){
+ const prev=grouped.get(v.id)||{rule:v.id,impact:v.impact,pages:0,selectors:[]};
+ prev.pages++;
+ for(const selector of v.selectors||[])if(prev.selectors.length<4&&!prev.selectors.includes(selector))prev.selectors.push(selector);
+ grouped.set(v.id,prev);
+}
+console.log("Axe actionable rules:",JSON.stringify([...grouped.values()].sort((a,b)=>b.pages-a.pages).slice(0,15)));
+const failingNodes=new Map();
+for(const page of summary.pages)for(const violation of page.violations||[]){
+ for(const selector of violation.selectors||[]){
+  const key=Array.isArray(selector)?selector.join(" > "):String(selector);
+  failingNodes.set(key,(failingNodes.get(key)||0)+1);
+ }
+}
+console.log("Axe common failing selectors:",JSON.stringify([...failingNodes].sort((a,b)=>b[1]-a[1]).slice(0,75)));
+
 console.log("Axe audit:",summary.pages.length,"cases,",summary.seriousOrCritical,"serious/critical and",summary.moderateOrMinor,"other violations.");
-if(summary.seriousOrCritical)process.exitCode=1;
+const inspectionFailures=summary.pages.filter(p=>p.failed);
+const causes=[...new Set(inspectionFailures.map(p=>p.failed))];
+console.log("Axe inspection errors:",summary.inspectionErrors,"distinct causes:",JSON.stringify(causes.slice(0,6)));
+if(summary.seriousOrCritical||summary.inspectionErrors)process.exitCode=1;

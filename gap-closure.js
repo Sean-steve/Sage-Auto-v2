@@ -4,7 +4,7 @@
 (function(){"use strict";
 var G={};
 var SEED={
- signup:{email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",step:1,emailVerified:false,accountCreated:false},
+ signup:{email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",planSelected:false,step:1,emailVerified:false,accountCreated:false},
  subscriptionRecovery:{company:"Nairobi Drive",state:"Active",graceUntil:"2026-11-01",history:[]},
  onboarding:{branch:false,team:false,fleet:false,pricing:false,website:false},
  tenantTasks:[{id:"PR-01",company:"Safari Trails Rentals",status:"Awaiting review",requestedPlan:"Growth",notes:"Manual tenant provisioning preview"}],
@@ -41,7 +41,7 @@ function formField(c,label,name,type,value,required){return '<div class="field">
 function select(c,label,name,opts,value){return '<div class="field"><label for="d2-'+h(c,name)+'">'+h(c,label)+'</label><select id="d2-'+h(c,name)+'" name="'+h(c,name)+'">'+opts.map(function(o){var v=Array.isArray(o)?o[0]:o,cap=Array.isArray(o)?o[1]:o;return '<option value="'+h(c,v)+'" '+(v===value?"selected":"")+'>'+h(c,cap)+'</option>'}).join("")+'</select></div>'}
 function textArea(c,label,name,ph){return '<div class="field full"><label for="d2-'+h(c,name)+'">'+h(c,label)+'</label><textarea rows="3" name="'+h(c,name)+'" id="d2-'+h(c,name)+'" placeholder="'+h(c,ph)+'"></textarea></div>'}
 function stat(c,things){return '<div class="grid kpis">'+things.map(x=>c.stat(x[0],x[1],x[2],x[3])).join("")+'</div>'}
-function stepper(c,current,names){return '<div class="d2-stepper">'+names.map(function(name,i){return '<div class="d2-step '+(i+1===current?"current":i+1<current?"done":"")+'"><span>'+String(i+1).padStart(2,"0")+'</span><b>'+h(c,name)+'</b></div>'}).join("")+'</div>'}
+function stepper(c,current,names){return '<div class="d2-stepper" tabindex="0" role="region" aria-label="Onboarding progress; scroll horizontally to review all steps">'+names.map(function(name,i){return '<div class="d2-step '+(i+1===current?"current":i+1<current?"done":"")+'"><span>'+String(i+1).padStart(2,"0")+'</span><b>'+h(c,name)+'</b></div>'}).join("")+'</div>'}
 function card(c,label,description,icon,action){return '<button class="surface-card" data-action="p3d2:'+action+'"><span class="surface-icon">'+ic(c,icon)+'</span><strong>'+h(c,label)+'</strong><span>'+h(c,description)+'</span><footer>Open experience →</footer></button>'}
 function menu(c,items){return '<div class="surface-grid">'+items.map(x=>card(c,...x)).join("")+'</div>'}
 function save(c,msg){c.save();c.state.modal=null;c.render();c.showToast(msg)}
@@ -163,6 +163,7 @@ if(p==="First-run setup"){body=stepper(c,5,names)+section("Your first launch che
 '<div class="quick-actions">'+btn(c,"Open company setup workspace","company:Company launch checklist",null,"primary")+'</div>'+info(c,"No tenant was provisioned","This page is a visual first-run journey. Only the backend can create a company securely.")}
 if(p==="Sign in & recovery"){body=section("Access your Sage Auto workspace","Design for sign-in and account recovery; no real login",'<div class="pad-22"><div class="form-grid">'+formField(c,"Work email","email","email",u.email,true)+formField(c,"Password","password","password","",true)+'</div><div class="quick-actions">'+btn(c,"Preview sign-in","auth-preview",null,"primary")+btn(c,"Preview recovery","auth-recovery")+'</div></div>')+
 info(c,"Authentication does not exist in this prototype","Never enter real passwords, API keys, or personal account credentials here.")}
+if(window.SageOnboardingContinuity)body=window.SageOnboardingContinuity.decorate(c,p,body);
 return publicBase(c,p,p==="Sign in & recovery"?"Account access and recovery states":"Step "+step+" of 5 · Guided SaaS onboarding",body)}
 function checkout(c){var x=c.db.checkout,v=vehicle(c,x.vehicle)||c.db.vehicles[0],total=quote(c,v.id,x.days);var content=stepper(c,x.step,["Vehicle","Details","Review","Request"]),box='';
 if(x.step===1)box=section("Select dates and a vehicle","Pricing and eligibility are examples only",'<div class="pad-22"><div class="form-grid">'+select(c,"Vehicle","vehicle",c.db.vehicles.filter(z=>z.status==="Available"&&z.compliant).map(z=>[z.id,z.name+" · "+money(c,z.rate)+"/day"]),x.vehicle)+
@@ -217,7 +218,7 @@ return '<div class="modal-backdrop" data-action="close-outside"><section class="
 /* Action engine: records only preview intentions; no real transaction/authorization */
 function val(name){var root=document.getElementById("d2-form")||document,el=root.querySelector&&root.querySelector('[name="'+name+'"]');return el?String(el.value||"").trim():""}
 function positive(v){return Number.isFinite(Number(v))&&Number(v)>0}
-function act(action,node,c){if(!action.startsWith("p3d2:"))return false;seed(c.db);var cmd=action.slice(5),id=node.getAttribute("data-id")||"",db=c.db,side=c.state.portal,p=cmd.split(":"),type=p[0],rest=p.slice(1).join(":"),x,b;
+function act(action,node,c){if(!action.startsWith("p3d2:"))return false;seed(c.db);if(window.SageOnboardingContinuity&&window.SageOnboardingContinuity.action(action,node,c))return true;var cmd=action.slice(5),id=node.getAttribute("data-id")||"",db=c.db,side=c.state.portal,p=cmd.split(":"),type=p[0],rest=p.slice(1).join(":"),x,b;
 if(type==="open"){c.state.modal="p3d2:"+rest+":"+(id||"");c.render();return true}
 if(type==="close"){c.state.modal=null;c.render();return true}
 if(type==="page"){c.navigate(side,rest);return true}
@@ -235,12 +236,17 @@ if(type==="refund-approve"||type==="refund-reject"){x=db.refundReviews.find(t=>t
 if(type==="provision-reviewed"){x=db.tenantTasks.find(t=>t.id===id);if(x){x.status="Reviewed; not provisioned";return save(c,"Provisioning request reviewed; no tenant created.")}return true}
 if(type==="platform-review"){x=db.platformEvents.find(t=>t.id===id);if(x){x.status="In review";return save(c,"Incident triage saved in demo.")}return true}
 if(type==="auth-preview"||type==="auth-recovery"){c.showToast("Authentication is not connected. Do not enter real account credentials.");return true}
-if(type==="plan-select"){db.signup.plan=id;return save(c,"Demo plan preference selected; no charge made.")}
+if(type==="plan-select"){if(!["Starter","Growth","Pro"].includes(id)){c.showToast("Choose a displayed sample plan.");return true}db.signup.plan=id;db.signup.planSelected=true;return save(c,"Demo plan preference selected; no charge made.")}
 if(type==="verify-demo"){if(val("verification")!=="123456"){c.showToast("Enter the example verification code shown on this screen.");return true}db.signup.emailVerified=true;c.save();c.navigate("marketing","Business setup");c.showToast("Demo code accepted; no real email verification performed.");return true}
 if(type==="save-business"){if(!val("company")||!val("contact")){c.showToast("Enter the company name and contact before continuing.");return true}db.signup.company=val("company");db.signup.contact=val("contact");db.signup.region=val("region");c.save();c.navigate("marketing","Choose plan");return true}
 if(type==="go-checkout"){db.checkout.step=1;c.save();c.navigate("branded","Checkout & review");return true}
 if(type==="checkout-vehicle"){var selected=vehicle(c,id);if(!selected||selected.status!=="Available"||!selected.compliant){c.showToast("This car is not ready for enquiries.");return true}db.checkout.vehicle=id;db.checkout.step=1;c.save();c.navigate("branded","Checkout & review");return true}
 if(type==="checkout-back"){db.checkout.step=Math.max(1,db.checkout.step-1);return save(c,"Returned to previous review step.")}
+if((type==="checkout-next"&&db.checkout.step===1||type==="checkout-submit")&&window.SageRentalJourneyV2){
+ var chk=db.checkout;var proposal={vehicle:val("vehicle")||chk.vehicle,pickup:val("pickup")||chk.pickup,days:val("days")||chk.days};
+ var outcome=window.SageRentalJourneyV2.checkoutGuard(c,proposal);
+ if(!outcome.ok){c.showToast(outcome.message);return true;}
+}
 if(type==="checkout-next"){var step=db.checkout.step;if(step===1){var v=val("vehicle")||db.checkout.vehicle,start=val("pickup")||db.checkout.pickup,days=+(val("days")||db.checkout.days);if(!demoDate(start)||start<"2026-10-13"||!positive(days)){c.showToast("Choose a valid pickup date and rental duration.");return true}var veh=vehicle(c,v);if(!veh||veh.status!=="Available"||!veh.compliant){c.showToast("That example car is unavailable. Choose a different vehicle.");return true}db.checkout.vehicle=v;db.checkout.pickup=start;db.checkout.days=days}
 if(step===2){if(!val("customer")||!val("contact")){c.showToast("Enter your name and contact for the enquiry.");return true}db.checkout.customer=val("customer");db.checkout.contact=val("contact")}
 db.checkout.step=Math.min(3,step+1);return save(c,"Review next step of rental enquiry.")}
