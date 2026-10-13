@@ -51,7 +51,7 @@ click("premium:fleetFilter:All");
 click("premium:fleetView:list");here('class="p-gallery is-list"');assert.ok(storage.has("sage-auto-v2-premium-pref"));
 click("v2:asset",null,"V01");here("Vehicle asset profile");click("close");
 screen("company","Bookings");here("RESERVATION INTELLIGENCE");here("Reservation register");
-screen("renter","Overview");here("p-role-renter");here("Less time arranging.");here("Your journeys");
+screen("renter","Overview");here("p-role-renter");here("Less time arranging.");here("Your current drive");
 screen("owner","Overview");here("p-role-owner");here("Your assets are working for you");
 screen("driver","Overview");here("p-role-driver");here("Ready for your next assignment");
 screen("corporate","Overview");here("p-role-corporate");
