@@ -6,13 +6,13 @@
  var pages=["Tour & setup","Verify email","Business setup","Choose plan","First-run setup"];
  var labels=["Account","Email example","Company profile","Sample plan","Review setup"];
  function complete(s){
-  return [Boolean(s.accountCreated),Boolean(s.accountCreated&&s.emailVerified),Boolean(s.company&&s.contact),Boolean(s.accountCreated&&s.emailVerified&&s.company&&s.plan),false];
+  return [Boolean(s.accountCreated),Boolean(s.accountCreated&&s.emailVerified),Boolean(s.company&&s.contact),Boolean(s.accountCreated&&s.emailVerified&&s.company&&s.plan&&s.planSelected),false];
  }
  function resume(s){
   if(!s.accountCreated)return "Tour & setup";
   if(!s.emailVerified)return "Verify email";
   if(!s.company||!s.contact)return "Business setup";
-  if(!s.plan)return "Choose plan";
+  if(!s.plan||!s.planSelected)return "Choose plan";
   return "First-run setup";
  }
  function stepPage(title){return pages.indexOf(title)>=0;}
@@ -43,7 +43,7 @@
     '<button type="button" class="sx2-action secondary" data-action="p3d2:page:Tour & setup">Edit demo account</button></div></section>';
   }else if(page==="Choose plan"){
    extra='<section class="sx2-helper-card" aria-label="Plan selection guidance"><h3 class="sx2-section-title">Compare, then return when ready</h3>'+
-    '<p class="sx2-muted">Selected plan: <strong>'+escape(signup.plan||"None")+'</strong>. This is a preference only; billing and entitlement enforcement are not connected.</p>'+
+    '<p class="sx2-muted">Sample plan: <strong>'+escape(signup.plan||"None")+'</strong>. This is a preference only; billing and entitlement enforcement are not connected.</p>'+
     '<div class="sx2-helper-actions"><button type="button" class="sx2-action secondary" data-action="p3d2:page:Business setup">← Back to company details</button>'+
     control("resume","Resume from saved details",false)+'</div></section>';
   }else if(page==="Sign in & recovery"){
@@ -83,7 +83,7 @@
   if(act==="p3d2:setup:resend"){ctx.showToast("Sample code: 123456. No message has been sent.");return true;}
   if(act==="p3d2:setup:reset"){
    if(typeof confirm==="function"&&!confirm("Reset only the browser-local sample signup? Other demo workspaces will be preserved."))return true;
-   ctx.db.signup={email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",step:1,emailVerified:false,accountCreated:false};
+   ctx.db.signup={email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",planSelected:false,step:1,emailVerified:false,accountCreated:false};
    ctx.save();recoveryPreview=false;ctx.navigate("marketing","Tour & setup");
    ctx.showToast("Sample signup reset. No real account was affected.");return true;
   }
