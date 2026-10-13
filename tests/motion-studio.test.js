@@ -19,7 +19,7 @@ has("sx-cockpit");has("Make every");has("journey count.");has("THE DEPARTURE BOA
 has("Grace Njeri");has("SA-1044");
 click("studio:lane:Confirmed");has('sx-filter-tab active');assert.ok(!root.innerHTML.includes('class="sx-journey-person"><span class="sx-order">01</span><div><strong>Grace Njeri'));
 click("studio:lane:All");has("Grace Njeri");
-click("studio:range:30 days");has("30 days sample");assert.ok(mem.has("sage-auto-studio-prefs-v1"));click("studio:chartbucket:1");has("sample booking");
+click("studio:range:30 days");has("30 days sample");assert.ok(mem.has("sage-auto-studio-prefs-v1"));click("studio:chartbucket:0");has("example booking(s)");
 change("studio-branch","Karen");has("Mercedes C200");assert.ok(!root.innerHTML.includes('sx-fleet-pill" data-action="vehicle" data-id="V01"'));
 change("studio-branch","All");has("Toyota Prado TX");
 click("studio:theme");assert.equal(bodyAttrs["data-studio-theme"],"night");click("studio:theme");assert.equal(bodyAttrs["data-studio-theme"],"light");
