@@ -5,6 +5,7 @@
 var G={};
 var SEED={
  signup:{email:"",company:"",contact:"",region:"Nairobi",plan:"Growth",step:1,emailVerified:false,accountCreated:false},
+ subscriptionRecovery:{company:"Nairobi Drive",state:"Active",graceUntil:"2026-11-01",history:[]},
  onboarding:{branch:false,team:false,fleet:false,pricing:false,website:false},
  tenantTasks:[{id:"PR-01",company:"Safari Trails Rentals",status:"Awaiting review",requestedPlan:"Growth",notes:"Manual tenant provisioning preview"}],
  eventHealth:[{id:"EV-101",name:"BookingCreated",service:"Operations event bus",status:"Healthy",lastSeen:"13 Oct · 16:24"},{id:"EV-102",name:"PaymentReconciled",service:"Finance worker",status:"Needs review",lastSeen:"13 Oct · 11:30"},{id:"EV-103",name:"Notifications",service:"Communication worker",status:"Not connected",lastSeen:"—"}],
@@ -58,11 +59,12 @@ if(p==="Offers & promotions")return offers(c);
 if(p==="Refund approvals")return refunds(c);
 if(p==="Invoice detail")return invoices(c);
 if(p==="Company launch checklist")return companyLaunch(c);
+if(p==="Subscription status")return subscriptionCompany(c);
 return null}
 function platformPage(c){seed(c.db);var p=c.state.page, map={
 "Tenant provisioning":provision,"Entitlement review":entitlements,"Integration health":health,"Jobs & events":jobs,
 "Platform incidents":platformIncident,"Platform roles":platformRoles,"Support access":supportAccess,
-"Compliance policies":policies,"Platform notifications":platformNotifications};
+"Compliance policies":policies,"Platform notifications":platformNotifications,"Subscription recovery":subscriptionPlatform};
 return map[p]?map[p](c):null}
 function publicPage(c){seed(c.db);if(c.state.portal==="marketing"&&["Tour & setup","Verify email","Business setup","Choose plan","First-run setup","Sign in & recovery"].includes(c.state.page))return marketing(c);
 if(c.state.portal==="branded"&&c.state.page==="Checkout & review")return checkout(c);
@@ -101,6 +103,18 @@ stat(c,[["Ready steps",count+" / 5","Browser-local checklist","check"],["Fleet",
 section("Launch your company","Complete the remaining configuration steps intentionally",'<div class="d2-launch-list">'+names.map(function(x){return '<div class="d2-launch-row">'+tag(c,c.db.onboarding[x[0]]?"Done":"Pending")+'<div><strong>'+x[1]+'</strong><p>'+x[2]+'</p></div>'+btn(c,c.db.onboarding[x[0]]?"Reopen":"Mark reviewed","launch-toggle",x[0])+'</div>'}).join("")+'</div>')+
 info(c,"Onboarding flags are a demonstration","Marking a step done does not verify company legal information, activate subscription entitlements, or publish a tenant website.")}
 
+
+function subscriptionCompany(c){var x=c.db.subscriptionRecovery,blocked=x.state==="Suspended";return header(c,"Subscription status","Know what is available if a SaaS subscription payment is late.","Platform billing preview","company:Subscription & billing")+
+stat(c,[["Account state",x.state,"Design simulation","shield"],["Grace review date",x.graceUntil,"Example only","calendar"],["Fleet records",String(c.db.vehicles.length),"Never erased on lapse","car"],["Payment integration","Disconnected","No actual billing","wallet"]])+
+section("Your operating access","Use explicit communication and a safe recovery path",'<div class="pad-22">'+data(c,"Subscription",x.state)+data(c,"Core business data","Retained during a lapse")+data(c,"Access to invoices and support",blocked?"Should remain readable":"Normal demonstration")+data(c,"New rental operations",blocked?"Would be restricted server-side":"Available in prototype")+
+btn(c,"Contact SaaS support (demo)","subscription-support",null,"primary")+'</div>')+
+info(c,"Service cut-off requires careful rules","No actual feature entitlements are enforced in this browser. Customers' active rentals, audit history and invoices must not disappear when a plan lapses.")}
+function subscriptionPlatform(c){var x=c.db.subscriptionRecovery;return header(c,"Subscription lifecycle & recovery","Show grace, restriction and reactivation as separate deliberate states.","Review tenant plans","page:Subscriptions")+
+stat(c,[["Example company",x.company,"Tenant billing account","briefcase"],["Current phase",x.state,"Browser-local state","shield"],["Grace target",x.graceUntil,"Illustrative notification","calendar"],["Billing provider","Not connected","No real dues","wallet"]])+
+section("Operator access lifecycle","Change example status to inspect company-side recovery UI",'<div class="pad-22">'+data(c,"Tenant",x.company)+data(c,"Lifecycle phase",x.state)+data(c,"Business records","Retained and readable where required")+
+'<div class="quick-actions">'+btn(c,"Mark past due","subscription-set","Past due")+btn(c,"Enter grace","subscription-set","Grace period")+btn(c,"Preview restricted","subscription-set","Suspended","danger")+btn(c,"Restore preview","subscription-set","Active","primary")+'</div></div>')+
+section("Lifecycle history","Audit-style mock updates",x.history.length?tbl(["Event","State","Explanation"],x.history.map(x=>row(c,[h(c,x.id),h(c,x.state),h(c,x.notes)]))):'<div class="empty-state">No lifecycle updates recorded.</div>')+
+info(c,"No subscription is actually suspended","Entitlement checks, payment provider webhooks, user communications, grace periods and safe read-only access must be enforced and tested by the production backend.")}
 
 /* Platform governance surfaces */
 function provision(c){var x=c.db.tenantTasks;return header(c,"Tenant provisioning","Review company readiness, subscriptions and setup before granting access.","New provisioning review","open:provision")+
@@ -211,6 +225,8 @@ if(type==="company"){c.navigate("company",rest);return true}
 if(type==="to-company"){c.navigate("company","Overview");return true}
 if(type==="to-renter"){c.navigate("renter","Overview");return true}
 if(type==="guide"){c.showToast("This is a frontend preview; review the contract status and next steps.");return true}
+if(type==="subscription-set"){if(side!=="platform")return true;var states=["Active","Past due","Grace period","Suspended"];if(!states.includes(id))return true;db.subscriptionRecovery.state=id;db.subscriptionRecovery.history.unshift({id:"SC-"+Date.now(),state:id,notes:"Browser-only subscription lifecycle preview"});return save(c,"Demo subscription state updated; no account access changed.")}
+if(type==="subscription-support"){db.platformNotices.unshift({id:"PN-"+Date.now(),type:"Account support request",details:"Demo company requested subscription assistance",status:"Unread"});return save(c,"Demo support notice saved; no message delivered.")}
 if(type==="launch-toggle"){if(!(id in db.onboarding))return true;db.onboarding[id]=!db.onboarding[id];return save(c,"Demo readiness step updated.");}
 if(type==="notice-read"){x=db.platformNotices.find(t=>t.id===id);if(x){x.status="Read";return save(c,"Platform notice marked read in preview.")}return true}
 if(type==="amend-approve"||type==="amend-decline"){x=db.bookingChanges.find(t=>t.id===id&&t.status==="Pending review");if(!x)return true;x.status=type==="amend-approve"?"Approved in principle":"Declined";return save(c,"Change decision stored; rental dates and amounts remain unchanged.")}
