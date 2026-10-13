@@ -42,6 +42,17 @@ The role-aware prototype now includes dedicated interface flows for SaaS platfor
 - [GitHub Actions visual evidence](https://github.com/Sean-steve/Sage-Auto-v2/actions/workflows/visual-qa.yml) · Chromium screenshots at five viewport widths plus axe WCAG scan. The workflow must finish and its screenshots/defects be reviewed before declaring visual signoff.
 - Run npm run test:mock for the simulation suite, or npm run test:visual and npm run test:accessibility after installing Playwright and starting the local static server.
 
+## Reference-informed operational UI/UX upgrade
+
+Following the five-source SaaS UI/UX study, **seven core operational screens** now use workflow-specific visuals rather than generic dashboard tables: **Availability board, Bookings pipeline, Inspection condition studio, Finance reconciliation, Pricing quote lab, Returns work queue and Owner Settlements**. Actions remain connected to the existing browser-local mock workflows.
+
+- [Implementation guide and limitations](docs/SAAS_REFERENCE_UI_IMPLEMENTATION.md)
+- [Design principles and external references](docs/DESIGN_REFERENCES_SAAS_2026.md)
+- Validation: `node tests/reference-experience.test.js`
+- Responsive browser screenshots: GitHub Actions → **Premium UI · Browser Visual Review**. Visual sign-off still requires review of actual rendered captures.
+
+**No production backend, payments, signatures, real availability or RBAC were introduced.**
+
 ## Design inspiration & quality standards
 
 Future UI/UX work must use the [Sage Auto SaaS Design Reference Study](docs/DESIGN_REFERENCES_SAAS_2026.md): learn visual polish from Dribbble, workflow simplicity from Ubrain, scalable patterns from Fuse, lifecycle coherence from VenueX, and admin maturity from Skote. Do not copy copyrighted template assets or sacrifice functional workflows for decoration.
