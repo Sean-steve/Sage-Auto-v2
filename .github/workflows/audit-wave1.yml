@@ -20,7 +20,7 @@ jobs:
           node-version: '22'
       - name: JavaScript syntax (all retained and new bundles)
         run: |
-          for file in app.js company-detail.js external-portals.js gap-closure.js premium-experience.js reference-experience.js motion-studio.js ops-hardening.js experience-foundation.js onboarding-continuity.js; do node --check "$file"; done
+          for file in app.js company-detail.js external-portals.js gap-closure.js premium-experience.js reference-experience.js motion-studio.js ops-hardening.js experience-foundation.js onboarding-continuity.js rental-core.js rental-journey.js; do node --check "$file"; done
       - name: Existing mock workflow suite
         run: npm run test:mock
       - name: Additional operational regressions
@@ -32,6 +32,8 @@ jobs:
         run: |
           node tests/audit-wave1.test.js
           node tests/audit-onboarding.test.js
+          node tests/rental-core.test.js
+          node tests/rental-journey.test.js
 
   browser-qa:
     name: Rendered revenue and work mode at five widths
@@ -60,6 +62,7 @@ jobs:
         run: |
           node tests/audit-wave1-browser.mjs
           node tests/audit-onboarding-browser.mjs
+          node tests/rental-journey-browser.mjs
       - name: Existing accessibility audit
         run: npm run test:accessibility
       - name: Upload actual screenshots and findings
@@ -67,6 +70,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sage-auto-audit-wave1-rendered-evidence
-          path: artifacts/audit-wave1/
+          path: artifacts/
           if-no-files-found: warn
           retention-days: 28
