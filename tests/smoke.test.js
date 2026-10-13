@@ -30,7 +30,7 @@ function click(action,value,id){
 }
 function has(s){assert.ok(root.innerHTML.includes(s),"Expected UI output to include: "+s)}
 has("Good afternoon");
-has("Today's operations");
+has("Today&#39;s operations");
 click("nav","Bookings");
 has("Reservation register");
 click("booking-action",null,"SA-1044");
