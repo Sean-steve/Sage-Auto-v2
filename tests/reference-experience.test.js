@@ -31,7 +31,7 @@ has("Toyota Prado TX");
 has("View reservation");
 click("rx:week:1");has("20");click("rx:today");has("13");
 change("rx-vehicle","V01");assert.ok(win.SageReferenceV2.ui.vehicle==="V01");assert.equal((root.innerHTML.match(/<th scope="row" class="rx-sticky-col">/g)||[]).length,1,"vehicle filter should show one calendar row");
-change("rx-branch","Westlands");has("No vehicles match these filters.");
+change("rx-branch","Karen");has("No vehicles match these filters.");
 change("rx-branch","All");has("Toyota Prado TX");
 route("Bookings");has("RESERVATION REGISTER");has("rx-lanes");has("Grace Njeri");
 click("rx:stage:Awaiting payment");has("rx-lane-single");absent("Daniel Mwangi");
