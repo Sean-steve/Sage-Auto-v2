@@ -78,7 +78,7 @@ function changesContent(c){
 }
 function handoverContent(c){
  const confirmed=(c.db.bookings||[]).filter(b=>b.status==="Confirmed");
- return head("CH-007","Physical handover gate","Contract acknowledgment, twelve inspection categories, no unresolved defect and fleet eligibility are required.")+
+ return head("CH-007","Physical handover gate","Contract acknowledgment, 12 inspection categories, no unresolved defect and fleet eligibility are required.")+
  panel("Ready for review · "+confirmed.length+" confirmed","Completing all inspection sections with no defects is valid, but possession changes only on explicit handover.",
  '<div class="rj-grid">'+confirmed.map(b=>{const v=namedVehicle(c,b);
   const ok=Boolean(v&&v.compliant&&v.status!=="Maintenance");
