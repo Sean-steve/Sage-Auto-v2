@@ -64,7 +64,7 @@ function decorativeIntro(c,page){const config={"Bookings":["RESERVATION INTELLIG
 "Website studio":["DIGITAL SHOWROOM","Your brand. Your front door.","Give renters a coherent path from discovery to an enquiry.","globe","premium:route:Fleet","Explore fleet"]
 }[page];
 if(!config)return "";return '<div class="p-page-intro"><div><span class="p-overline">'+config[0]+'</span><h2>'+config[1]+'</h2><p>'+config[2]+'</p></div><span class="p-page-intro-icon">'+icon(c,config[3],32)+'</span></div>'}
-function company(c,html){if(c.state.page==="Overview"||c.state.page==="Today's operations")return companyDashboard(c);if(c.state.page==="Fleet")return carGallery(c);
+function company(c,html){if(window.SageReferenceV2){window.SageReferenceV2.connect(c);const experience=window.SageReferenceV2.renderCompany(c);if(experience!==null)return experience}if(c.state.page==="Overview"||c.state.page==="Today's operations")return companyDashboard(c);if(c.state.page==="Fleet")return carGallery(c);
 return '<div class="p-surface p-workflow">'+decorativeIntro(c,c.state.page)+html+'</div>'}
 const roles={
 platform:{eyebrow:"SAGE AUTO · NETWORK OPERATIONS",lead:"The platform behind",em:"every journey.",sub:"Keep operators moving, understand demand, and look after the whole network.",primary:["Manage companies","Companies"],secondary:["Approvals","Approvals"],icon:"layers",photo:"#223b42"},
