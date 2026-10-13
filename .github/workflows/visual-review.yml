@@ -1,0 +1,40 @@
+name: Premium UI · Browser Visual Review
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser QA dependency
+        run: npm install --no-save --no-package-lock playwright
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start static prototype
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/sage-ui.log 2>&1 &
+          for n in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/sage-ui.log
+          exit 1
+      - name: Capture mobile, tablet and desktop experience
+        run: node tests/p3e-browser-qa.cjs
+      - name: Upload real-browser screenshots and measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sage-auto-p3e-visual-review
+          path: visual-artifacts/
+          if-no-files-found: warn
+          retention-days: 21
