@@ -8,9 +8,9 @@ const html=fs.readFileSync("index.html","utf8");
 const handlers={};
 const nodes={};
 const rows=[
- {dataset:{plan:"Growth",region:"Nairobi",active:"true",amount:"9999"},hidden:false},
- {dataset:{plan:"Starter",region:"Nakuru",active:"true",amount:"4999"},hidden:false},
- {dataset:{plan:"Pro",region:"Mombasa",active:"false",amount:"0"},hidden:false}
+ {dataset:{plan:"Growth",region:"Nairobi",active:"true",rated:"true",amount:"9999"},hidden:false},
+ {dataset:{plan:"Starter",region:"Nakuru",active:"true",rated:"true",amount:"4999"},hidden:false},
+ {dataset:{plan:"Pro",region:"Mombasa",active:"false",rated:"false",amount:"0"},hidden:false}
 ];
 const el=id=>nodes[id]||(nodes[id]={id,textContent:"",value:"",hidden:false});
 const workspace={querySelectorAll(selector){return selector==="[data-sx2-tenant-row]"?rows:[]},querySelector(selector){if(selector===".sx2-bridge-step.final strong")return el("bridge");return null}};
